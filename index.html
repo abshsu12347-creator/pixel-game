@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>像素闯关</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a0a1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: 'Courier New', monospace;
+  image-rendering: pixelated;
+}
+#hud {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 8px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 2px 2px #000;
+  letter-spacing: 2px;
+}
+#hud span { color: #ffe84d; }
+canvas {
+  border: 4px solid #444;
+  image-rendering: pixelated;
+  display: block;
+}
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  z-index: 10;
+}
+#overlay h1 { font-size: 48px; color: #ffe84d; text-shadow: 3px 3px #c00; margin-bottom: 20px; letter-spacing: 4px; }
+#overlay p { font-size: 20px; margin: 8px 0; color: #aef; }
+#overlay button {
+  margin-top: 30px;
+  padding: 14px 40px;
+  font-size: 22px;
+  font-family: 'Courier New', monospace;
+  background: #ffe84d;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 2px;
+  image-rendering: pixelated;
+}
+#overlay button:hover { background: #ffb700; }
+.pixel-stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+</style>
+</head>
+<body>
+<div id="hud">
+  <div>关卡：<span id="lvlDisplay">1</span></div>
+  <div>生命：<span id="livesDisplay">❤❤❤</span></div>
+</div>
+<canvas id="c" width="720" height="400"></canvas>
+
+<div id="overlay">
+  <h1 id="overlayTitle">像素闯关</h1>
+  <p id="overlayMsg">← → / A D 移动 &nbsp; 空格/W/↑ 跳跃</p>
+  <button id="overlayBtn">开始游戏</button>
+</div>
+
+<script>
+// ─── Audio ───────────────────────────────────────────────
+const AC = new (window.AudioContext || window.webkitAudioContext)();
+function beep(freq, dur, type='square', vol=0.15) {
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.connect(g); g.connect(AC.destination);
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(vol, AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + dur);
+  o.start(); o.stop(AC.currentTime + dur);
+}
+function sfxJump()  { beep(300,0.06); setTimeout(()=>beep(500,0.06),60); }
+function sfxDie()   { [400,300,200,100].forEach((f,i)=>setTimeout(()=>beep(f,0.1,'sawtooth',0.2),i*80)); }
+function sfxWin()   { [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.15,'square',0.2),i*120)); }
+function sfxClear() { [262,330,392,523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'square',0.25),i*100)); }
+
+let bgInterval = null;
+const bgMelody = [262,294,330,349,392,440,494,523];
+let bgIdx = 0;
+function startBgMusic() {
+  if (bgInterval) return;
+  bgInterval = setInterval(()=>{
+    beep(bgMelody[bgIdx%bgMelody.length],0.1,'square',0.04);
+    bgIdx++;
+  },280);
+}
+function stopBgMusic() { clearInterval(bgInterval); bgInterval=null; }
+
+// ─── Canvas ──────────────────────────────────────────────
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+const W = canvas.width, H = canvas.height;
+const TS = 32; // tile size
+
+// ─── Colors ──────────────────────────────────────────────
+const COLORS = {
+  sky:    ['#1a1a3e','#0d0d2b'],
+  ground: '#5c4a1e',
+  grass:  '#3a7d44',
+  plat:   '#8b6914',
+  platTop:'#a07820',
+  spike:  '#c0392b',
+  spikeD: '#7b241c',
+  flag:   '#e74c3c',
+  flagPole:'#bdc3c7',
+  coin:   '#f1c40f',
+  player: ['#3498db','#e74c3c','#f39c12'],
+  bg1:    '#2c3e50',
+  cloud:  '#ecf0f1',
+};
+
+// ─── Level Data ───────────────────────────────────────────
+// Each level: platforms[], spikes[], flagX, flagY, bgColor, scrollWidth
+const LEVELS = [
+  { // Level 1 - tutorial
+    bgA:'#1a1a3e', bgB:'#0d0d2b',
+    platforms:[
+      {x:0,   y:368, w:240, h:32},
+      {x:280, y:368, w:160, h:32},
+      {x:480, y:368, w:80,  h:32},
+      {x:600, y:336, w:96,  h:32},
+      {x:150, y:300, w:80,  h:16},
+      {x:320, y:270, w:80,  h:16},
+      {x:480, y:240, w:80,  h:16},
+      {x:620, y:210, w:100, h:16},
+      {x:740, y:240, w:80,  h:16},
+      {x:850, y:270, w:96,  h:16},
+      {x:960, y:300, w:160, h:16},
+      {x:1080,y:336, w:240, h:64},
+    ],
+    spikes:[
+      {x:244,y:352,w:36,h:16},
+      {x:464,y:352,w:16,h:16},
+      {x:590,y:352,w:10,h:16},
+    ],
+    flagX:1250, flagY:272,
+    width:1350,
+  },
+  { // Level 2 - harder gaps + more spikes
+    bgA:'#0d2b1a', bgB:'#051a0d',
+    platforms:[
+      {x:0,   y:368, w:200, h:32},
+      {x:260, y:340, w:80,  h:16},
+      {x:390, y:310, w:64,  h:16},
+      {x:500, y:280, w:64,  h:16},
+      {x:610, y:250, w:80,  h:16},
+      {x:740, y:280, w:64,  h:16},
+      {x:840, y:310, w:64,  h:16},
+      {x:940, y:340, w:64,  h:16},
+      {x:1040,y:310, w:80,  h:16},
+      {x:1160,y:280, w:80,  h:16},
+      {x:1280,y:368, w:240, h:32},
+    ],
+    spikes:[
+      {x:210,y:352,w:48,h:16},
+      {x:354,y:294,w:36,h:16},
+      {x:464,y:264,w:36,h:16},
+      {x:574,y:234,w:36,h:16},
+      {x:694,y:264,w:46,h:16},
+      {x:794,y:294,w:46,h:16},
+      {x:894,y:324,w:46,h:16},
+      {x:1000,y:294,w:36,h:16},
+      {x:1120,y:264,w:40,h:16},
+    ],
+    flagX:1450, flagY:336,
+    width:1560,
+  },
+  { // Level 3 - hardest
+    bgA:'#1a0d2b', bgB:'#0d051a',
+    platforms:[
+      {x:0,   y:368, w:160, h:32},
+      {x:200, y:330, w:48,  h:16},
+      {x:300, y:290, w:48,  h:16},
+      {x:400, y:250, w:48,  h:16},
+      {x:500, y:210, w:96,  h:16},
+      {x:640, y:250, w:48,  h:16},
+      {x:740, y:290, w:48,  h:16},
+      {x:840, y:250, w:64,  h:16},
+      {x:950, y:210, w:64,  h:16},
+      {x:1060,y:250, w:64,  h:16},
+      {x:1170,y:290, w:64,  h:16},
+      {x:1280,y:330, w:64,  h:16},
+      {x:1380,y:368, w:300, h:32},
+    ],
+    spikes:[
+      {x:165,y:352,w:35,h:16},
+      {x:254,y:314,w:46,h:16},
+      {x:354,y:274,w:46,h:16},
+      {x:454,y:234,w:46,h:16},
+      {x:600,y:234,w:40,h:16},
+      {x:694,y:274,w:46,h:16},
+      {x:794,y:234,w:46,h:16},
+      {x:910,y:194,w:40,h:16},
+      {x:1020,y:234,w:40,h:16},
+      {x:1130,y:274,w:40,h:16},
+      {x:1244,y:314,w:36,h:16},
+      {x:1350,y:352,w:30,h:16},
+    ],
+    flagX:1590, flagY:336,
+    width:1700,
+  }
+];
+
+// ─── Game State ───────────────────────────────────────────
+let level = 0, lives = 3, score = 0;
+let state = 'title'; // title | playing | dead | win | gameover
+let camX = 0;
+let frameCount = 0;
+
+const GRAVITY = 0.5, JUMP = -12, SPEED = 4;
+
+let player = {};
+function resetPlayer() {
+  player = { x:60, y:300, w:20, h:28, vx:0, vy:0, onGround:false, dir:1, animFrame:0, animTimer:0, dead:false };
+}
+
+// ─── Input ────────────────────────────────────────────────
+const keys = {};
+document.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (state === 'playing' && (e.code==='Space'||e.code==='KeyW'||e.code==='ArrowUp')) {
+    if (player.onGround) { player.vy = JUMP; player.onGround = false; sfxJump(); }
+  }
+});
+document.addEventListener('keyup', e => keys[e.code] = false);
+
+// ─── Helpers ──────────────────────────────────────────────
+function rectOverlap(ax,ay,aw,ah, bx,by,bw,bh) {
+  return ax < bx+bw && ax+aw > bx && ay < by+bh && ay+ah > by;
+}
+
+// ─── Draw Pixel Art ───────────────────────────────────────
+function drawPixelRect(x,y,w,h,color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(Math.floor(x-camX), Math.floor(y), w, h);
+}
+
+function drawPlatform(p) {
+  const px = p.x - camX;
+  ctx.fillStyle = COLORS.plat;
+  ctx.fillRect(Math.floor(px), p.y, p.w, p.h);
+  ctx.fillStyle = COLORS.platTop;
+  ctx.fillRect(Math.floor(px), p.y, p.w, 6);
+  ctx.fillStyle = COLORS.grass;
+  ctx.fillRect(Math.floor(px), p.y, p.w, 4);
+  // pixel pattern
+  ctx.fillStyle = 'rgba(0,0,0,0.18)';
+  for (let i=0; i<p.w; i+=8) ctx.fillRect(Math.floor(px)+i, p.y+8, 4, p.h-8);
+}
+
+function drawSpike(s) {
+  const sx = s.x - camX;
+  const n = Math.floor(s.w / 12);
+  const tw = s.w / n;
+  for (let i=0;i<n;i++) {
+    const bx = sx + i*tw;
+    ctx.fillStyle = COLORS.spikeD;
+    ctx.beginPath();
+    ctx.moveTo(Math.floor(bx), s.y+s.h);
+    ctx.lineTo(Math.floor(bx+tw/2), s.y);
+    ctx.lineTo(Math.floor(bx+tw), s.y+s.h);
+    ctx.fill();
+    ctx.fillStyle = COLORS.spike;
+    ctx.beginPath();
+    ctx.moveTo(Math.floor(bx+2), s.y+s.h-2);
+    ctx.lineTo(Math.floor(bx+tw/2), s.y+2);
+    ctx.lineTo(Math.floor(bx+tw-2), s.y+s.h-2);
+    ctx.fill();
+  }
+}
+
+function drawFlag(fx, fy) {
+  const sx = fx - camX;
+  ctx.fillStyle = COLORS.flagPole;
+  ctx.fillRect(Math.floor(sx), fy-48, 4, 52);
+  // waving flag
+  const wave = Math.sin(frameCount*0.1)*3;
+  ctx.fillStyle = COLORS.flag;
+  ctx.beginPath();
+  ctx.moveTo(Math.floor(sx+4), fy-48);
+  ctx.lineTo(Math.floor(sx+28), fy-40+wave);
+  ctx.lineTo(Math.floor(sx+4), fy-32);
+  ctx.fill();
+}
+
+function drawPlayer() {
+  const px = player.x - camX;
+  const py = player.y;
+  const flip = player.dir < 0;
+  ctx.save();
+  if (flip) { ctx.translate(Math.floor(px+player.w), Math.floor(py)); ctx.scale(-1,1); }
+  else ctx.translate(Math.floor(px), Math.floor(py));
+
+  const legOff = player.onGround ? Math.floor(frameCount/6)%2 : 0;
+
+  // body (blue shirt)
+  ctx.fillStyle = '#3498db';
+  ctx.fillRect(2, 8, 16, 12);
+
+  // head (skin)
+  ctx.fillStyle = '#f5cba7';
+  ctx.fillRect(3, 0, 14, 10);
+  // eyes
+  ctx.fillStyle = '#222';
+  ctx.fillRect(6, 3, 3, 3);
+  ctx.fillRect(11, 3, 3, 3);
+  // mouth
+  ctx.fillStyle = '#c0392b';
+  ctx.fillRect(7, 7, 6, 2);
+
+  // legs
+  ctx.fillStyle = '#2c3e50';
+  ctx.fillRect(3, 20, 6, 8 + (legOff?-2:0));
+  ctx.fillRect(11, 20, 6, 8 + (legOff?2:0));
+
+  // feet
+  ctx.fillStyle = '#1a252f';
+  ctx.fillRect(2, 26 + (legOff?-2:0), 7, 3);
+  ctx.fillRect(11, 26 + (legOff?2:0), 7, 3);
+
+  // arms
+  ctx.fillStyle = '#2980b9';
+  ctx.fillRect(0, 9, 4, 8);
+  ctx.fillRect(16, 9, 4, 8);
+
+  ctx.restore();
+
+  // death flash
+  if (player.dead) {
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = '#e74c3c';
+    ctx.fillRect(Math.floor(px), py, player.w, player.h);
+    ctx.globalAlpha = 1;
+  }
+}
+
+function drawBackground() {
+  const lv = LEVELS[level];
+  // gradient sky
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0, lv.bgA);
+  grad.addColorStop(1, lv.bgB);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // pixel stars
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  const starSeed = level * 123;
+  for (let i=0; i<40; i++) {
+    const sx = ((i*97+starSeed*13)%1800 - camX*0.1) % W;
+    const sy = (i*53+starSeed*7) % 200;
+    if (sx>=0 && sx<W) ctx.fillRect(Math.floor(sx), Math.floor(sy), 2, 2);
+  }
+
+  // distant pixel mountains
+  ctx.fillStyle = level===0?'#2c3e50': level===1?'#1a3a25':'#2a1a3e';
+  for (let i=0; i<8; i++) {
+    const mx = ((i*220 - camX*0.3) % (W+200)) - 100;
+    const mh = 60 + (i*37)%60;
+    ctx.beginPath();
+    ctx.moveTo(Math.floor(mx), H);
+    ctx.lineTo(Math.floor(mx+100), H-mh);
+    ctx.lineTo(Math.floor(mx+200), H);
+    ctx.fill();
+  }
+}
+
+// ─── HUD update ───────────────────────────────────────────
+function updateHUD() {
+  document.getElementById('lvlDisplay').textContent = level+1;
+  document.getElementById('livesDisplay').textContent = '❤'.repeat(lives) || '💀';
+}
+
+// ─── Game Logic ───────────────────────────────────────────
+function update() {
+  if (state !== 'playing') return;
+  frameCount++;
+
+  const lv = LEVELS[level];
+
+  // movement
+  let moving = false;
+  if (keys['ArrowLeft'] || keys['KeyA']) { player.vx = -SPEED; player.dir=-1; moving=true; }
+  else if (keys['ArrowRight'] || keys['KeyD']) { player.vx = SPEED; player.dir=1; moving=true; }
+  else player.vx = 0;
+
+  // gravity
+  player.vy += GRAVITY;
+  player.y += player.vy;
+  player.x += player.vx;
+
+  // clamp left
+  if (player.x < 0) player.x = 0;
+
+  // fall off bottom → die
+  if (player.y > H + 60) { triggerDeath(); return; }
+
+  // platform collision
+  player.onGround = false;
+  for (const p of lv.platforms) {
+    const prevBottom = player.y + player.h - player.vy;
+    if (
+      player.x + player.w > p.x &&
+      player.x < p.x + p.w &&
+      player.y + player.h >= p.y &&
+      prevBottom <= p.y + 2 &&
+      player.vy >= 0
+    ) {
+      player.y = p.y - player.h;
+      player.vy = 0;
+      player.onGround = true;
+    }
+  }
+
+  // spike collision
+  for (const s of lv.spikes) {
+    if (rectOverlap(player.x+3,player.y+18, player.w-6, player.h-18, s.x,s.y,s.w,s.h)) {
+      triggerDeath(); return;
+    }
+  }
+
+  // flag collision
+  if (rectOverlap(player.x,player.y,player.w,player.h, lv.flagX,lv.flagY-48,30,52)) {
+    levelComplete();
+    return;
+  }
+
+  // camera follow
+  const targetCam = player.x - W/3;
+  camX = Math.max(0, Math.min(targetCam, lv.width - W));
+}
+
+function triggerDeath() {
+  if (player.dead) return;
+  player.dead = true;
+  sfxDie();
+  lives--;
+  updateHUD();
+  setTimeout(()=>{
+    if (lives <= 0) {
+      state = 'gameover';
+      stopBgMusic();
+      showOverlay('GAME OVER','没有生命值了...','再来一次');
+    } else {
+      resetPlayer();
+      camX = 0;
+      player.dead = false;
+    }
+  }, 800);
+}
+
+function levelComplete() {
+  sfxWin();
+  if (level >= LEVELS.length - 1) {
+    state = 'win';
+    stopBgMusic();
+    sfxClear();
+    setTimeout(()=>showOverlay('恭喜通关！','你完成了全部3个关卡！','再玩一次'), 500);
+  } else {
+    level++;
+    updateHUD();
+    resetPlayer();
+    camX = 0;
+    beep(880,0.3,'square',0.2);
+  }
+}
+
+// ─── Overlay ─────────────────────────────────────────────
+function showOverlay(title, msg, btn) {
+  document.getElementById('overlayTitle').textContent = title;
+  document.getElementById('overlayMsg').textContent = msg;
+  document.getElementById('overlayBtn').textContent = btn;
+  document.getElementById('overlay').style.display = 'flex';
+}
+function hideOverlay() { document.getElementById('overlay').style.display = 'none'; }
+
+document.getElementById('overlayBtn').addEventListener('click', ()=>{
+  if (AC.state === 'suspended') AC.resume();
+  hideOverlay();
+  level = 0; lives = 3; frameCount = 0;
+  updateHUD();
+  resetPlayer();
+  camX = 0;
+  state = 'playing';
+  startBgMusic();
+});
+
+// ─── Render ───────────────────────────────────────────────
+function render() {
+  ctx.clearRect(0,0,W,H);
+  drawBackground();
+
+  if (state === 'playing' || state === 'dead') {
+    const lv = LEVELS[level];
+    for (const p of lv.platforms) drawPlatform(p);
+    for (const s of lv.spikes) drawSpike(s);
+    drawFlag(lv.flagX, lv.flagY);
+    drawPlayer();
+
+    // level label top-left
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+    ctx.fillRect(8,8,160,30);
+    ctx.fillStyle = '#ffe84d';
+    ctx.font = 'bold 16px "Courier New"';
+    ctx.fillText(`LEVEL ${level+1}`, 16, 28);
+  }
+}
+
+// ─── Loop ─────────────────────────────────────────────────
+function loop() {
+  update();
+  render();
+  requestAnimationFrame(loop);
+}
+loop();
+updateHUD();
+</script>
+</body>
+</html>
