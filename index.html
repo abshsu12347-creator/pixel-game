@@ -58,6 +58,27 @@ canvas {
   image-rendering: pixelated;
 }
 #overlay button:hover { background: #ffb700; }
+#sponsor-btn {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: #6a0dad;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: bold;
+  border: 3px solid #9b30ff;
+  box-shadow: 3px 3px 0 #3a0070;
+  cursor: pointer;
+  letter-spacing: 1px;
+  image-rendering: pixelated;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.1s;
+}
+#sponsor-btn:hover { background: #8b1adb; box-shadow: 1px 1px 0 #3a0070; }
 .pixel-stars {
   position: fixed;
   inset: 0;
@@ -67,6 +88,7 @@ canvas {
 </style>
 </head>
 <body>
+<a id="sponsor-btn" href="https://www.ifdian.net/a/pixelgame" target="_blank" rel="noopener">💜 赞助解锁全关卡</a>
 <div id="hud">
   <div>关卡：<span id="lvlDisplay">1</span></div>
   <div>生命：<span id="livesDisplay">❤❤❤</span></div>
