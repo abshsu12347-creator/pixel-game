@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YJG花园 — 北京顶级花园植物定制</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #1a2e1a;
+  --bg-deep:     #0f1f0f;
+  --bg-card:     #152314;
+  --bg-card-h:   #1d2e1b;
+  --gold:        #c9a84c;
+  --gold-lt:     #dfc070;
+  --gold-dim:    rgba(201,168,76,.45);
+  --gold-faint:  rgba(201,168,76,.1);
+  --text:        #e8dfc4;
+  --text-dim:    rgba(232,223,196,.55);
+  --text-faint:  rgba(232,223,196,.28);
+  --border:      rgba(201,168,76,.18);
+  --hh:          78px;
+  --sbw:         232px;
+  --cw:          286px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 140% 70% at 50% -5%, #243c22 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 90% 110%, #0c170c 0%, transparent 50%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+/* ════════════ HEADER ════════════ */
+header {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--hh); z-index: 200;
+  background: rgba(5,10,5,.98);
+  backdrop-filter: blur(28px);
+  border-bottom: none;
+}
+/* 顶部金色光带 */
+header::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold-dim) 15%, var(--gold) 50%, var(--gold-dim) 85%, transparent 100%);
+}
+.hd-inner {
+  height: var(--hh);
+  display: flex; align-items: center;
+  padding: 0 36px;
+}
+
+/* LOGO 区域 */
+.hd-logo { display: flex; align-items: center; gap: 0; flex-shrink: 0; }
+.hd-emblem {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--gold-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: var(--gold);
+  letter-spacing: 1px; flex-shrink: 0;
+  background: radial-gradient(circle, rgba(201,168,76,.1) 0%, transparent 70%);
+  box-shadow: 0 0 12px rgba(201,168,76,.15), inset 0 0 12px rgba(201,168,76,.05);
+  font-family: "Georgia", serif;
+}
+.hd-logo-vline {
+  width: 1px; height: 34px; margin: 0 20px; flex-shrink: 0;
+  background: linear-gradient(180deg, transparent, var(--gold-dim) 40%, var(--gold-dim) 60%, transparent);
+}
+.hd-logo-txt { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+.hd-logo-txt h1 {
+  font-size: 16px; font-weight: 700; color: var(--gold);
+  letter-spacing: 8px; line-height: 1;
+  font-family: "Georgia","STSong",serif;
+}
+.hd-logo-txt p {
+  font-size: 7.5px; color: var(--text-faint);
+  letter-spacing: 5px; text-transform: uppercase;
+}
+
+/* 中间装饰纹 */
+.hd-sep { flex: 1; }
+.hd-ornament {
+  font-size: 11px; color: var(--gold-dim);
+  letter-spacing: 4px; user-select: none; flex-shrink: 0;
+  opacity: .7;
+}
+
+/* 导航链接 */
+.hd-nav { display: flex; gap: 30px; margin-left: 36px; margin-right: 30px; }
+.hd-nav a {
+  font-size: 9px; letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--text-dim); text-decoration: none; transition: color .2s;
+  position: relative; padding-bottom: 2px;
+}
+.hd-nav a::after {
+  content: ""; position: absolute; bottom: 0; left: 50%; right: 50%;
+  height: 1px; background: var(--gold);
+  transition: left .25s, right .25s;
+}
+.hd-nav a:hover { color: var(--gold); }
+.hd-nav a:hover::after { left: 0; right: 0; }
+
+/* 购物车按钮 */
+.hd-cart-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: none; border: 1px solid var(--gold-dim);
+  color: var(--text-dim); cursor: pointer; padding: 9px 20px;
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  transition: all .25s; font-family: inherit; flex-shrink: 0;
+}
+.hd-cart-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-faint); }
+.hd-cart-count {
+  background: var(--gold); color: #050a05;
+  border-radius: 50%; width: 16px; height: 16px;
+  font-size: 9px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+/* 底部金线 */
+.hd-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg,transparent 0%,rgba(201,168,76,.15) 20%,rgba(201,168,76,.25) 50%,rgba(201,168,76,.15) 80%,transparent 100%);
+}
+
+/* ════════════ SIDEBAR ════════════ */
+aside {
+  position: fixed; top: var(--hh); left: 0;
+  width: var(--sbw); height: calc(100vh - var(--hh));
+  overflow-y: auto; overflow-x: hidden;
+  background: var(--bg-deep);
+  border-right: 1px solid var(--border);
+  z-index: 100;
+}
+.sb-top {
+  padding: 22px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+.sb-top-label { font-size: 8.5px; letter-spacing: 4px; text-transform: uppercase; color: var(--text-faint); }
+
+.sb-group { }
+.sb-ghd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 20px; cursor: pointer; user-select: none;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold-dim); transition: color .15s;
+}
+.sb-ghd:hover, .sb-ghd.open { color: var(--gold); }
+.sb-arrow { font-size: 12px; transition: transform .28s ease; display: inline-block; }
+.sb-ghd.open .sb-arrow { transform: rotate(90deg); }
+
+.sb-items { max-height: 0; overflow: hidden; transition: max-height .38s ease; }
+.sb-items.open { max-height: 700px; }
+
+.sb-item {
+  display: block; width: 100%; background: none; border: none;
+  text-align: left; padding: 9px 20px 9px 32px;
+  font-size: 13px; color: var(--text-dim); cursor: pointer;
+  position: relative; transition: color .15s, background .15s;
+  font-family: inherit;
+}
+.sb-item::before {
+  content: ""; position: absolute; left: 20px; top: 50%;
+  transform: translateY(-50%);
+  width: 4px; height: 4px; border-radius: 50%;
+  background: rgba(201,168,76,.3); transition: background .15s;
+}
+.sb-item:hover { color: var(--text); background: var(--gold-faint); }
+.sb-item:hover::before { background: var(--gold-dim); }
+.sb-item.active { color: var(--gold); background: var(--gold-faint); }
+.sb-item.active::before { background: var(--gold); }
+
+.sb-div {
+  height: 1px; margin: 6px 16px;
+  background: linear-gradient(90deg,transparent,var(--border),transparent);
+}
+
+/* ════════════ MAIN ════════════ */
+main {
+  margin-left: var(--sbw);
+  margin-right: var(--cw);
+  margin-top: var(--hh);
+  padding: 50px 44px 70px;
+  min-height: calc(100vh - var(--hh));
+}
+
+/* welcome */
+.welcome-sec {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: 55vh; text-align: center; gap: 14px;
+}
+.wl-eye { font-size: 9px; letter-spacing: 5px; text-transform: uppercase; color: var(--gold-dim); }
+.wl-title { font-size: 32px; font-weight: 300; color: var(--text); letter-spacing: 3px; font-family: "Georgia","STSong",serif; }
+.wl-line { width: 1px; height: 56px; background: linear-gradient(var(--gold-dim),transparent); margin: 4px auto; }
+.wl-desc { font-size: 13px; color: var(--text-faint); letter-spacing: 1.5px; max-width: 380px; line-height: 1.8; }
+
+/* section header */
+.sec-hd { margin-bottom: 32px; padding-bottom: 18px; border-bottom: 1px solid var(--border); position: relative; }
+.sec-hd::after { content:""; position:absolute; bottom:-1px; left:0; width:52px; height:1px; background:var(--gold); }
+.sec-crumb { font-size: 9px; letter-spacing: 3.5px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; }
+.sec-title { font-size: 24px; font-weight: 300; color: var(--text); letter-spacing: 1.5px; font-family: "Georgia","STSong",serif; }
+.sec-title em { font-style: normal; color: var(--gold); font-weight: 700; }
+.sec-desc { font-size: 12.5px; color: var(--text-faint); margin-top: 5px; letter-spacing: .5px; }
+
+/* product section visibility */
+.prod-section { display: none; }
+.prod-section.active { display: block; }
+
+/* ── PRODUCT GRID ── */
+.prod-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+/* ── CARD ── */
+.p-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform .28s, border-color .28s, box-shadow .28s;
+}
+/* top accent line */
+.p-card::before {
+  content:""; position:absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg,transparent,var(--gold-dim),transparent);
+  transition: background .28s;
+}
+.p-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--gold-dim);
+  box-shadow: 0 14px 44px rgba(0,0,0,.45), 0 0 24px rgba(201,168,76,.05);
+}
+.p-card:hover::before { background: linear-gradient(90deg,transparent,var(--gold),transparent); }
+
+.p-img {
+  aspect-ratio: 1;
+  background: linear-gradient(155deg,#1b2e19 0%,#0c1c0c 100%);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 7px; position: relative; overflow: hidden;
+}
+.p-glow {
+  position: absolute; width: 110px; height: 110px; border-radius: 50%;
+  background: radial-gradient(circle,rgba(201,168,76,.09) 0%,transparent 70%);
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  transition: transform .35s;
+}
+.p-card:hover .p-glow { transform: translate(-50%,-50%) scale(1.6); }
+.p-icon { font-size: 38px; position:relative; z-index:1; }
+.p-img-lbl { font-size: 8.5px; letter-spacing:3px; text-transform:uppercase; color:var(--text-faint); position:relative;z-index:1; }
+.p-badge {
+  position:absolute; top:10px; right:10px; z-index:2;
+  background: rgba(201,168,76,.1); border: 1px solid var(--gold-dim);
+  color:var(--gold); font-size:8.5px; letter-spacing:2px; padding:3px 8px; text-transform:uppercase;
+}
+
+.p-body { padding: 13px 15px 15px; }
+.p-cat { font-size: 8.5px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 5px; }
+.p-name {
+  font-size: 14.5px; font-weight: 600; color: var(--gold); margin-bottom: 2px;
+  font-family: "Georgia","STSong",serif; line-height: 1.3;
+}
+.p-latin { font-size: 9.5px; color: var(--gold-dim); font-style: italic; margin-bottom: 9px; }
+.p-hr { height:1px; background:linear-gradient(90deg,var(--border),transparent); margin-bottom:9px; }
+.p-tags { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:11px; }
+.p-tag {
+  border:1px solid rgba(201,168,76,.2); color:var(--text-faint);
+  font-size:8.5px; letter-spacing:1px; padding:2px 7px; text-transform:uppercase;
+}
+.p-foot { display:flex; align-items:center; justify-content:space-between; }
+.p-price { font-size:16px; font-weight:300; color:var(--text); letter-spacing:.5px; }
+.p-price sup { font-size:10px; color:var(--text-dim); }
+.p-price span { font-size:10px; color:var(--text-faint); }
+.p-btn {
+  background:transparent; border:1px solid var(--gold-dim);
+  color:var(--gold-dim); font-size:9.5px; letter-spacing:2px; padding:6px 11px;
+  cursor:pointer; text-transform:uppercase; transition:all .2s; font-family:inherit;
+}
+.p-btn:hover { border-color:var(--gold); color:var(--gold); background:var(--gold-faint); }
+
+/* ── SIZE SELECTOR ── */
+.sz-btns { display:flex; gap:4px; margin-bottom:9px; }
+.sz-btn {
+  flex:1; background:transparent; border:1px solid var(--border);
+  color:var(--text-faint); font-size:9px; letter-spacing:1px;
+  padding:5px 2px; cursor:pointer; transition:all .15s; font-family:inherit; text-align:center;
+}
+.sz-btn:hover { border-color:var(--gold-dim); color:var(--text-dim); }
+.sz-btn.active { border-color:var(--gold); color:var(--gold); background:var(--gold-faint); }
+.p-spec { font-size:9.5px; color:var(--text-faint); margin-bottom:8px; min-height:14px; letter-spacing:.3px; }
+
+/* ════════════ CART PANEL ════════════ */
+.cart-panel {
+  position: fixed; top: var(--hh); right: 0;
+  width: var(--cw); height: calc(100vh - var(--hh));
+  background: var(--bg-deep);
+  border-left: 1px solid var(--border);
+  z-index: 100;
+  display: flex; flex-direction: column;
+}
+
+.cp-head {
+  padding: 18px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.cp-hd-row { display:flex; align-items:center; justify-content:space-between; }
+.cp-title { font-size: 9.5px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+.cp-clear-btn {
+  background:none; border:1px solid var(--border); color:var(--text-faint);
+  font-size:9px; letter-spacing:1px; padding:3px 9px; cursor:pointer; transition:all .15s; font-family:inherit;
+}
+.cp-clear-btn:hover { border-color:var(--gold-dim); color:var(--gold-dim); }
+.cp-sub { font-size:10px; color:var(--text-faint); margin-top:4px; letter-spacing:1px; }
+
+.cp-items { flex:1; overflow-y:auto; overflow-x:hidden; }
+.cp-empty {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  height:100%; gap:12px; padding:24px; text-align:center;
+  color:var(--text-faint);
+}
+.cp-empty-icon { font-size:34px; opacity:.3; }
+.cp-empty-txt { font-size:12px; letter-spacing:.5px; line-height:1.8; }
+
+.cp-item {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:12px 18px; border-bottom:1px solid rgba(201,168,76,.07);
+}
+.cp-item-icon { font-size:18px; flex-shrink:0; padding-top:2px; }
+.cp-item-info { flex:1; min-width:0; }
+.cp-item-name { font-size:12.5px; color:var(--gold); font-weight:600; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cp-item-uprice { font-size:10px; color:var(--text-faint); }
+.cp-qty { display:flex; align-items:center; gap:5px; flex-shrink:0; }
+.cp-qbtn {
+  width:19px; height:19px; border:1px solid var(--border); background:none;
+  color:var(--gold-dim); font-size:13px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all .15s;
+}
+.cp-qbtn:hover { border-color:var(--gold); color:var(--gold); }
+.cp-qnum { font-size:12.5px; color:var(--text); min-width:14px; text-align:center; }
+.cp-sub-price { font-size:11px; color:var(--text-dim); min-width:44px; text-align:right; flex-shrink:0; }
+
+.cp-summary { flex-shrink:0; padding:14px 20px; border-top:1px solid var(--border); }
+.cp-srow { display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-faint); margin-bottom:5px; }
+.cp-total-row { display:flex; justify-content:space-between; align-items:baseline; padding-top:10px; margin-top:8px; border-top:1px solid var(--border); }
+.cp-total-lbl { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--text-dim); }
+.cp-total-val { font-size:21px; font-weight:300; color:var(--gold); }
+.cp-total-val sup { font-size:12px; }
+.cp-checkout {
+  display:block; width:100%; margin-top:13px;
+  background:transparent; border:1px solid var(--gold); color:var(--gold);
+  font-size:10px; letter-spacing:3px; text-transform:uppercase; padding:12px;
+  cursor:pointer; position:relative; overflow:hidden; transition:color .25s; font-family:inherit;
+}
+.cp-checkout::before {
+  content:""; position:absolute; inset:0; background:var(--gold);
+  transform:scaleX(0); transform-origin:left; transition:transform .28s;
+}
+.cp-checkout:hover { color:var(--bg-deep); }
+.cp-checkout:hover::before { transform:scaleX(1); }
+.cp-checkout span { position:relative; z-index:1; }
+
+/* ════════════ CART CONTACT FORM ════════════ */
+.cp-contact {
+  flex-shrink:0; padding:16px 20px 20px;
+  border-top:1px solid var(--border);
+}
+.cp-contact-title {
+  font-size:11px; color:var(--text-dim); line-height:1.8;
+  margin-bottom:13px; letter-spacing:.5px;
+}
+.cp-input {
+  display:block; width:100%;
+  background:var(--bg-card); border:1px solid var(--border);
+  color:var(--text); font-size:13px; padding:9px 12px; outline:none;
+  transition:border-color .2s; font-family:inherit; margin-bottom:8px;
+}
+.cp-input::placeholder { color:var(--text-faint); }
+.cp-input:focus { border-color:var(--gold-dim); }
+.cp-submit-btn {
+  display:block; width:100%;
+  background:transparent; border:1px solid var(--gold); color:var(--gold);
+  font-size:10.5px; letter-spacing:2px; padding:11px 6px;
+  cursor:pointer; position:relative; overflow:hidden;
+  transition:color .25s; font-family:inherit; text-align:center;
+}
+.cp-submit-btn::before {
+  content:""; position:absolute; inset:0; background:var(--gold);
+  transform:scaleX(0); transform-origin:left; transition:transform .28s;
+}
+.cp-submit-btn:hover { color:var(--bg-deep); }
+.cp-submit-btn:hover::before { transform:scaleX(1); }
+.cp-submit-btn span { position:relative; z-index:1; }
+.cp-contact-success {
+  font-size:12px; color:var(--gold); text-align:center;
+  line-height:1.8; padding:10px 0; letter-spacing:.5px;
+}
+
+/* page footer */
+.pg-footer {
+  margin-top:72px; padding:24px 0; border-top:1px solid var(--border);
+  text-align:center; font-size:9.5px; letter-spacing:3px; text-transform:uppercase; color:var(--text-faint);
+}
+.pg-footer em { font-style:normal; color:var(--gold-dim); }
+
+/* toast */
+#toast {
+  position:fixed; bottom:26px; left:50%;
+  transform:translateX(-50%) translateY(8px);
+  background:rgba(10,18,10,.95); border:1px solid var(--gold-dim);
+  color:var(--text); padding:10px 20px; font-size:13px; letter-spacing:.5px;
+  opacity:0; pointer-events:none; transition:all .3s; z-index:999;
+}
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="hd-inner">
+    <div class="hd-logo">
+      <div class="hd-emblem">YJG</div>
+      <div class="hd-logo-vline"></div>
+      <div class="hd-logo-txt">
+        <h1>YJG 花 园</h1>
+        <p>Beijing · Garden · Design</p>
+      </div>
+    </div>
+    <div class="hd-sep"></div>
+    <div class="hd-ornament">── ✦ ──</div>
+    <nav class="hd-nav">
+      <a href="#order-anchor">设计服务</a>
+      <a href="#order-anchor">关于我们</a>
+      <a href="#order-anchor">联系我们</a>
+    </nav>
+    <button class="hd-cart-btn" onclick="scrollToOrder()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      购物车
+      <span class="hd-cart-count" id="hd-cart-count">0</span>
+    </button>
+  </div>
+  <div class="hd-bar"></div>
+</header>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<aside id="sidebar">
+  <div class="sb-top">
+    <div class="sb-top-label">植物分类导航</div>
+  </div>
+  <div id="sb-nav"></div>
+</aside>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main id="main-area">
+
+  <div id="sec-welcome" class="welcome-sec">
+    <div class="wl-eye">YJG Garden · Beijing</div>
+    <div class="wl-title">北京顶级花园植物定制</div>
+    <div class="wl-line"></div>
+    <div class="wl-desc">请从左侧分类导航选择植物品类<br>浏览精选品种，构建您的理想花园</div>
+  </div>
+
+  <div id="prod-container"></div>
+
+  <div class="pg-footer">
+    <em>YJG 花园</em> · 北京顶级花园植物定制 · 专业园艺设计与施工 · 10年品质保障
+  </div>
+</main>
+
+<!-- ═══════════════ CART PANEL ═══════════════ -->
+<div class="cart-panel" id="cart-panel">
+  <div class="cp-head">
+    <div class="cp-hd-row">
+      <div class="cp-title">Selected Plants</div>
+      <button class="cp-clear-btn" onclick="clearCart()">清空</button>
+    </div>
+    <div class="cp-sub">您的植物清单</div>
+  </div>
+  <div class="cp-items" id="cp-items">
+    <div class="cp-empty">
+      <div class="cp-empty-icon">🌱</div>
+      <div class="cp-empty-txt">尚未选购植物<br>从左侧分类中挑选您的品种</div>
+    </div>
+  </div>
+  <div class="cp-summary" id="cp-summary" style="display:none">
+    <div class="cp-srow"><span>商品数量</span><span id="cp-count">0件</span></div>
+    <div class="cp-srow"><span>配送费用</span><span>待选配送方式</span></div>
+    <div class="cp-total-row">
+      <div class="cp-total-lbl">Total</div>
+      <div class="cp-total-val"><sup>¥</sup><span id="cp-total">0</span></div>
+    </div>
+    <button class="cp-checkout" onclick="focusContact()"><span>确认选单 →</span></button>
+  </div>
+  <div class="cp-contact">
+    <div class="cp-contact-title">留下联系方式<br>我们将尽快与您联系</div>
+    <div id="cp-contact-form">
+      <input class="cp-input" type="text" id="cp-name" placeholder="您的姓名">
+      <input class="cp-input" type="tel" id="cp-phone" placeholder="手机号码">
+      <button class="cp-submit-btn" onclick="submitContact()"><span>提交选单，等待联系</span></button>
+    </div>
+    <div class="cp-contact-success" id="cp-contact-success" style="display:none">
+      ✓ 已收到您的选单<br>我们将在30分钟内联系您
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─── CATEGORY DATA ───
+const GROUPS = [
+  {
+    id: 'hot', name: '北京热门选购',
+    cats: [
+      { id:'hot-arbor',  name:'热门乔木', icon:'🌳', crumb:'热门选购',  desc:'精选北京庭院最受欢迎乔木，高冠遮阴，四季成景', tags:['北京适生','耐寒','遮阴'], priceBase:680 },
+      { id:'hot-shrub',  name:'热门灌木', icon:'🌿', crumb:'热门选购',  desc:'别墅花境必备，低维护高颜值，多季观赏', tags:['北京适生','耐修剪','观花'], priceBase:180 },
+      { id:'hot-flower', name:'热门花卉', icon:'🌸', crumb:'热门选购',  desc:'四季更替，色彩缤纷，客户最爱精选品种', tags:['色彩丰富','四季','易养'], priceBase:68 },
+      { id:'hot-ground', name:'热门地被', icon:'🍀', crumb:'热门选购',  desc:'大面积铺植，抑制杂草，低养护高颜值', tags:['低养护','北京适生','抑草'], priceBase:38 },
+      { id:'hot-hedge',  name:'热门绿篱', icon:'🌾', crumb:'热门选购',  desc:'天然屏障，私密围合，耐修剪造型品种', tags:['私密','耐修剪','常绿'], priceBase:120 },
+      { id:'hot-vine',   name:'热门藤本', icon:'🪴', crumb:'热门选购',  desc:'廊架爬藤，垂直绿化，赋予空间灵动诗意', tags:['廊架','速生','垂直绿化'], priceBase:98 },
+    ]
+  },
+  {
+    id: 'outdoor', name: '室外植物',
+    cats: [
+      { id:'arbor',       name:'乔木',         icon:'🌳', crumb:'室外植物', desc:'高大挺拔，庭院骨架，经久不衰的景观投资', tags:['高大','长寿','遮阴'], priceBase:880 },
+      { id:'shrub',       name:'灌木',          icon:'🌿', crumb:'室外植物', desc:'丰富庭院层次，观叶观花，低维护首选', tags:['多层次','耐修剪','观赏'], priceBase:220 },
+      { id:'hedge',       name:'绿篱类',        icon:'🌾', crumb:'室外植物', desc:'造型灵活，隔断空间，打造整洁边界', tags:['造型','常绿','私密'], priceBase:140 },
+      { id:'herb-flower', name:'草本花卉',      icon:'🌸', crumb:'室外植物', desc:'色彩丰富，周期短，快速提升庭院颜值', tags:['色彩','快速','观赏'], priceBase:58 },
+      { id:'bulb',        name:'球根花卉',      icon:'🧅', crumb:'室外植物', desc:'名贵品种，欧式庄园气质，季节轮替之美', tags:['欧式','名贵','季节性'], priceBase:88 },
+      { id:'ground-cov',  name:'地被植物',      icon:'🍀', crumb:'室外植物', desc:'大面积覆盖，节省养护，绿意无边', tags:['覆盖','低养护','北京适生'], priceBase:42 },
+      { id:'lawn',        name:'草坪草',        icon:'🟩', crumb:'室外植物', desc:'绿茵如毯，北京耐寒品种，专业级草坪方案', tags:['耐寒','耐踩','专业'], priceBase:65 },
+      { id:'vine',        name:'藤本植物',      icon:'🌿', crumb:'室外植物', desc:'攀援廊架，垂直绿化，自然浪漫气息', tags:['廊架','速生','浪漫'], priceBase:110 },
+      { id:'aquatic',     name:'水生植物',      icon:'🪷', crumb:'室外植物', desc:'庭院水景点睛之作，荷风送香，鱼水相伴', tags:['水景','净化','观赏'], priceBase:78 },
+      { id:'bamboo',      name:'竹类',          icon:'🎋', crumb:'室外植物', desc:'东方美学，傲骨凌寒，现代中式庭院标配', tags:['中式','耐寒','四季常绿'], priceBase:320 },
+      { id:'orn-grass',   name:'观赏草',        icon:'🌾', crumb:'室外植物', desc:'随风摇曳，质感十足，现代设计感首选', tags:['设计感','低养护','四季'], priceBase:88 },
+      { id:'perennial',   name:'宿根花卉',      icon:'🌼', crumb:'室外植物', desc:'多年生长，一次种植，年年绽放的价值投资', tags:['多年生','年年开花','价值'], priceBase:72 },
+      { id:'annual',      name:'一二年生花卉',  icon:'🌻', crumb:'室外植物', desc:'季节性换色，让庭院常新常美', tags:['换色','季节性','鲜艳'], priceBase:48 },
+      { id:'fern',        name:'蕨类植物',      icon:'🌿', crumb:'室外植物', desc:'阴湿角落的绿色精灵，增加庭院层次感', tags:['耐阴','湿润','独特'], priceBase:92 },
+      { id:'fruit',       name:'果树类',        icon:'🍎', crumb:'室外植物', desc:'观赏与实用兼得，亲子体验，自然收获喜悦', tags:['食用','观赏','亲子'], priceBase:480 },
+      { id:'herb',        name:'香草类',        icon:'🌱', crumb:'室外植物', desc:'可食可赏，驱蚊提香，庭院与厨房的完美连接', tags:['可食','驱蚊','芳香'], priceBase:56 },
+    ]
+  },
+  {
+    id: 'indoor', name: '室内植物',
+    cats: [
+      { id:'indoor-plant', name:'室内盆栽', icon:'🏡', crumb:'室内植物', desc:'净化空气，提升室内空间品质，绿色生活态度', tags:['净化空气','耐阴','观赏'], priceBase:168 },
+      { id:'succulent',    name:'多肉植物', icon:'🪴', crumb:'室内植物', desc:'萌趣可爱，极耐干旱，忙碌生活的完美伴侣', tags:['耐旱','萌趣','低养护'], priceBase:58 },
+    ]
+  },
+];
+
+// price tiers for variety
+const PRICE_MULT = [1, 1.3, 0.85, 1.6, 1.1, 2.2, 0.9, 1.4];
+
+// ─── REAL PLANT DATA ───
+const cardState = {};
+
+const REAL_PLANTS = {
+  'hot-arbor': [
+    {
+      name:'白皮松', latin:'Pinus bungeana Zucc.', icon:'🌲',
+      badge:'北京乡土', tags:['北京乡土','耐寒','常绿'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.8-1m · 高1-1.5m',   price:280},
+        {label:'中规格', spec:'冠幅1.5-2m · 高2-3m',     price:680},
+        {label:'大规格', spec:'冠幅3-4m · 高4-5m',       price:1800},
+      ]
+    },
+    {
+      name:'银杏', latin:'Ginkgo biloba L.', icon:'🍃',
+      badge:'活化石', tags:['秋色叶','长寿','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'胸径3-5cm · 高2-3m',      price:320},
+        {label:'中规格', spec:'胸径8-10cm · 高4-5m',     price:750},
+        {label:'大规格', spec:'胸径15-18cm · 高6-8m',    price:2200},
+      ]
+    },
+    {
+      name:'海棠', latin:'Malus spectabilis (Aiton)', icon:'🌸',
+      badge:'春花名品', tags:['春季观花','耐寒','北京适生'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.8m · 高1-1.5m',     price:180},
+        {label:'中规格', spec:'冠幅1.5m · 高2-3m',       price:420},
+        {label:'大规格', spec:'冠幅3m · 高4-5m',         price:1200},
+      ]
+    },
+    {
+      name:'樱花', latin:'Prunus serrulata Lindl.', icon:'🌸',
+      badge:'热销', tags:['春季观花','浪漫','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.8m · 高1-1.5m',     price:200},
+        {label:'中规格', spec:'冠幅1.5m · 高2-3m',       price:480},
+        {label:'大规格', spec:'冠幅3m · 高4-5m',         price:1500},
+      ]
+    },
+    {
+      name:'玉兰', latin:'Magnolia denudata Desr.', icon:'🌷',
+      badge:'名贵', tags:['先花后叶','芳香','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.8m · 高1.5-2m',     price:260},
+        {label:'中规格', spec:'冠幅1.5m · 高3-4m',       price:600},
+        {label:'大规格', spec:'冠幅3m · 高5-6m',         price:1600},
+      ]
+    },
+    {
+      name:'油松', latin:'Pinus tabuliformis Carrière', icon:'🌲',
+      badge:'北京乡土', tags:['北京乡土','常绿','耐旱'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.8-1m · 高1-1.5m',   price:300},
+        {label:'中规格', spec:'冠幅1.5-2m · 高2.5-3m',   price:720},
+        {label:'大规格', spec:'冠幅3-4m · 高4-5m',       price:2000},
+      ]
+    },
+    {
+      name:'元宝枫', latin:'Acer truncatum Bunge', icon:'🍁',
+      badge:'秋色叶', tags:['秋色叶','耐寒','观赏'],
+      sizes:[
+        {label:'小规格', spec:'冠幅1m · 高1.5-2m',       price:150},
+        {label:'中规格', spec:'冠幅2m · 高3-4m',         price:380},
+        {label:'大规格', spec:'冠幅4m · 高5-6m',         price:1000},
+      ]
+    },
+    {
+      name:'国槐', latin:'Sophora japonica L.', icon:'🌳',
+      badge:'行道经典', tags:['耐旱','长寿','北京适生'],
+      sizes:[
+        {label:'小规格', spec:'胸径3-5cm · 高3-4m',      price:120},
+        {label:'中规格', spec:'胸径8-10cm · 高5-6m',     price:300},
+        {label:'大规格', spec:'胸径15-18cm · 高7-8m',    price:800},
+      ]
+    },
+    {
+      name:'碧桃', latin:'Prunus persica f. duplex', icon:'🌸',
+      badge:'观花', tags:['春季观花','鲜艳','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.8m · 高1-1.5m',     price:160},
+        {label:'中规格', spec:'冠幅1.5m · 高2-3m',       price:400},
+        {label:'大规格', spec:'冠幅3m · 高4-5m',         price:1100},
+      ]
+    },
+    {
+      name:'紫叶李', latin:'Prunus cerasifera f. atropurpurea', icon:'🌿',
+      badge:'彩叶', tags:['彩叶','四季观赏','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.8m · 高1-1.5m',     price:140},
+        {label:'中规格', spec:'冠幅1.5m · 高2-3m',       price:360},
+        {label:'大规格', spec:'冠幅3m · 高4-5m',         price:950},
+      ]
+    },
+    {
+      name:'栾树', latin:'Koelreuteria paniculata Laxm.', icon:'🌳',
+      badge:'三季景观', tags:['夏花秋果','耐寒','观赏'],
+      sizes:[
+        {label:'小规格', spec:'胸径3-4cm · 高3-4m',      price:130},
+        {label:'中规格', spec:'胸径8-10cm · 高5-6m',     price:320},
+        {label:'大规格', spec:'胸径15cm · 高7-8m',       price:850},
+      ]
+    },
+    {
+      name:'白蜡', latin:'Fraxinus chinensis Roxb.', icon:'🌳',
+      badge:'秋色叶', tags:['秋色叶','速生','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'胸径3-4cm · 高3m',        price:110},
+        {label:'中规格', spec:'胸径8-10cm · 高5m',       price:280},
+        {label:'大规格', spec:'胸径15cm · 高7m',         price:750},
+      ]
+    },
+    {
+      name:'山桃', latin:'Prunus davidiana (Carrière)', icon:'🌸',
+      badge:'早春先花', tags:['早春观花','耐旱','北京适生'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.8m · 高1-1.5m',     price:150},
+        {label:'中规格', spec:'冠幅1.5m · 高2-3m',       price:380},
+        {label:'大规格', spec:'冠幅3m · 高4-5m',         price:1000},
+      ]
+    },
+    {
+      name:'柳树', latin:'Salix babylonica L.', icon:'🌿',
+      badge:'水景首选', tags:['耐湿','速生','垂枝优美'],
+      sizes:[
+        {label:'小规格', spec:'胸径3-4cm · 高3-4m',      price:100},
+        {label:'中规格', spec:'胸径8-10cm · 高5-6m',     price:260},
+        {label:'大规格', spec:'胸径15-18cm · 高7-8m',    price:700},
+      ]
+    },
+    {
+      name:'丁香树', latin:'Syringa oblata Lindl.', icon:'🌺',
+      badge:'芳香名品', tags:['芳香','春季观花','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.8m · 高1-1.5m',     price:120},
+        {label:'中规格', spec:'冠幅1.5m · 高2-3m',       price:300},
+        {label:'大规格', spec:'冠幅3m · 高4-5m',         price:800},
+      ]
+    },
+  ],
+  'hot-shrub': [
+    {
+      name:'月季', latin:'Rosa chinensis Jacq.', icon:'🌹',
+      badge:'百花之后', tags:['四季观花','芳香','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'盆径15cm · 株高30-40cm',   price:35},
+        {label:'中规格', spec:'盆径25cm · 株高60-80cm',   price:85},
+        {label:'大规格', spec:'冠幅1.2m · 株高1-1.2m',   price:220},
+      ]
+    },
+    {
+      name:'绣球', latin:'Hydrangea macrophylla (Thunb.) Ser.', icon:'💜',
+      badge:'夏季明星', tags:['夏季观花','耐阴','色彩丰富'],
+      sizes:[
+        {label:'小规格', spec:'盆径15cm · 株高30-40cm',   price:45},
+        {label:'中规格', spec:'盆径25cm · 株高60-80cm',   price:120},
+        {label:'大规格', spec:'冠幅1m · 株高80-100cm',    price:280},
+      ]
+    },
+    {
+      name:'丁香', latin:'Syringa vulgaris L.', icon:'🌸',
+      badge:'芳香名品', tags:['芳香','春季观花','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.8-1m',     price:60},
+        {label:'中规格', spec:'冠幅1m · 高1.5-2m',       price:150},
+        {label:'大规格', spec:'冠幅2m · 高2.5-3m',       price:380},
+      ]
+    },
+    {
+      name:'连翘', latin:'Forsythia suspensa (Thunb.) Vahl', icon:'🌼',
+      badge:'春季先锋', tags:['早春观花','耐寒','速生'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.8m',       price:30},
+        {label:'中规格', spec:'冠幅1m · 高1.5m',         price:80},
+        {label:'大规格', spec:'冠幅2m · 高2.5m',         price:200},
+      ]
+    },
+    {
+      name:'紫薇', latin:'Lagerstroemia indica L.', icon:'🌺',
+      badge:'百日红', tags:['夏秋观花','耐热','树形优美'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.8-1m',     price:80},
+        {label:'中规格', spec:'冠幅1m · 高1.5-2m',       price:200},
+        {label:'大规格', spec:'冠幅2m · 高3-4m',         price:520},
+      ]
+    },
+    {
+      name:'榆叶梅', latin:'Prunus triloba Lindl.', icon:'🌸',
+      badge:'春花经典', tags:['春季观花','耐寒','北京适生'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.8m',       price:40},
+        {label:'中规格', spec:'冠幅1m · 高1.5m',         price:100},
+        {label:'大规格', spec:'冠幅2m · 高2.5m',         price:260},
+      ]
+    },
+    {
+      name:'木槿', latin:'Hibiscus syriacus L.', icon:'🌺',
+      badge:'夏花', tags:['夏秋观花','耐热','耐修剪'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.8m',       price:35},
+        {label:'中规格', spec:'冠幅1m · 高1.5m',         price:90},
+        {label:'大规格', spec:'冠幅2m · 高2.5m',         price:230},
+      ]
+    },
+    {
+      name:'迎春', latin:'Jasminum nudiflorum Lindl.', icon:'🌼',
+      badge:'春之使者', tags:['早春观花','耐寒','垂枝'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.6m',       price:25},
+        {label:'中规格', spec:'冠幅1m · 高1m',           price:65},
+        {label:'大规格', spec:'冠幅2m · 高1.5m',         price:170},
+      ]
+    },
+    {
+      name:'棣棠', latin:'Kerria japonica (L.) DC.', icon:'🌼',
+      badge:'耐阴首选', tags:['春季观花','耐阴','金黄色'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.6m',       price:30},
+        {label:'中规格', spec:'冠幅1m · 高1m',           price:75},
+        {label:'大规格', spec:'冠幅1.5m · 高1.5m',       price:190},
+      ]
+    },
+    {
+      name:'珍珠梅', latin:'Sorbaria sorbifolia (L.) A.Br.', icon:'🌿',
+      badge:'耐阴灌木', tags:['夏季观花','耐阴','速生'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.8m',       price:35},
+        {label:'中规格', spec:'冠幅1m · 高1.5m',         price:85},
+        {label:'大规格', spec:'冠幅2m · 高2m',           price:220},
+      ]
+    },
+    {
+      name:'锦带花', latin:'Weigela florida (Bunge) A.DC.', icon:'🌸',
+      badge:'花繁色艳', tags:['春末观花','耐寒','花量大'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.6m',       price:30},
+        {label:'中规格', spec:'冠幅1m · 高1m',           price:75},
+        {label:'大规格', spec:'冠幅2m · 高1.5m',         price:190},
+      ]
+    },
+    {
+      name:'红瑞木', latin:'Cornus alba L.', icon:'🌿',
+      badge:'冬景特色', tags:['冬季观枝','红枝','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.6m',       price:35},
+        {label:'中规格', spec:'冠幅1m · 高1m',           price:90},
+        {label:'大规格', spec:'冠幅1.5m · 高1.5m',       price:230},
+      ]
+    },
+    {
+      name:'黄刺玫', latin:'Rosa xanthina Lindl.', icon:'🌼',
+      badge:'北京乡土', tags:['春季观花','耐旱','北京适生'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.6m',       price:25},
+        {label:'中规格', spec:'冠幅1m · 高1m',           price:65},
+        {label:'大规格', spec:'冠幅1.5m · 高1.5m',       price:170},
+      ]
+    },
+    {
+      name:'蜡梅', latin:'Chimonanthus praecox (L.) Link', icon:'🌸',
+      badge:'冬花名品', tags:['冬季观花','芳香','耐寒'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.8m',       price:80},
+        {label:'中规格', spec:'冠幅1m · 高1.5m',         price:200},
+        {label:'大规格', spec:'冠幅2m · 高2.5m',         price:520},
+      ]
+    },
+    {
+      name:'金银木', latin:'Lonicera maackii (Rupr.) Maxim.', icon:'🌿',
+      badge:'四季观赏', tags:['观花观果','耐寒','鸟类食源'],
+      sizes:[
+        {label:'小规格', spec:'冠幅0.5m · 高0.8m',       price:35},
+        {label:'中规格', spec:'冠幅1m · 高1.5m',         price:90},
+        {label:'大规格', spec:'冠幅2m · 高2.5m',         price:230},
+      ]
+    },
+  ],
+  'hot-flower': [
+    {name:'芍药',   icon:'🌸', badge:'名贵',   tags:['春季观花','芳香','多年生']},
+    {name:'鸢尾',   icon:'🌸', badge:'优雅',   tags:['春季观花','耐湿','多年生']},
+    {name:'薰衣草', icon:'🌸', badge:'芳香',   tags:['芳香','观花','耐旱']},
+    {name:'大丽花', icon:'🌺', badge:'艳丽',   tags:['夏秋观花','色彩丰富']},
+    {name:'松果菊', icon:'🌼', badge:'多年生', tags:['夏季观花','耐旱','多年生']},
+    {name:'金鸡菊', icon:'🌼', badge:'低养护', tags:['夏季观花','耐旱','低养护']},
+    {name:'波斯菊', icon:'🌸', badge:'秋花',   tags:['秋季观花','易栽培']},
+    {name:'向日葵', icon:'🌻', badge:'阳光',   tags:['夏季观花','大气']},
+    {name:'醉蝶花', icon:'🌸', badge:'夏花',   tags:['夏季观花','奇特']},
+    {name:'天人菊', icon:'🌼', badge:'耐旱',   tags:['夏秋观花','耐旱']},
+    {name:'百日草', icon:'🌺', badge:'长花期', tags:['长花期','色彩丰富']},
+    {name:'凤仙花', icon:'🌸', badge:'经典',   tags:['夏季观花','易栽培']},
+    {name:'万寿菊', icon:'🌼', badge:'驱虫',   tags:['夏秋观花','驱虫']},
+    {name:'孔雀草', icon:'🌼', badge:'矮生',   tags:['夏秋观花','耐热']},
+    {name:'翠菊',   icon:'🌸', badge:'秋花',   tags:['秋季观花','北京适生']},
+  ],
+  'hot-ground': [
+    {name:'玉簪',     icon:'🍃', badge:'耐阴首选', tags:['耐阴','观叶','多年生']},
+    {name:'麦冬',     icon:'🌿', badge:'常绿地被', tags:['常绿','耐阴','低养护']},
+    {name:'葱兰',     icon:'🌼', badge:'夏花',     tags:['夏季观花','耐湿']},
+    {name:'石竹',     icon:'🌸', badge:'春花',     tags:['春季观花','耐旱']},
+    {name:'景天',     icon:'🌿', badge:'多肉质',   tags:['耐旱','低养护']},
+    {name:'八宝景天', icon:'🌸', badge:'秋花',     tags:['秋季观花','耐旱']},
+    {name:'金叶过路黄',icon:'🍃',badge:'彩叶',     tags:['彩叶','耐湿']},
+    {name:'马蔺',     icon:'🌸', badge:'耐盐碱',   tags:['耐盐碱','耐旱','北京适生']},
+    {name:'萱草',     icon:'🌼', badge:'多年生',   tags:['夏季观花','耐旱','多年生']},
+    {name:'矾根',     icon:'🍃', badge:'彩叶',     tags:['彩叶','耐阴']},
+    {name:'白三叶',   icon:'🍀', badge:'草坪伴生', tags:['耐踩','低养护']},
+    {name:'二月兰',   icon:'🌸', badge:'早春',     tags:['早春观花','耐阴']},
+    {name:'蒲公英',   icon:'🌼', badge:'乡土',     tags:['北京乡土','食用']},
+    {name:'虎耳草',   icon:'🍃', badge:'耐阴',     tags:['耐阴','湿润']},
+    {name:'活血丹',   icon:'🌿', badge:'药用',     tags:['耐阴','药用']},
+  ],
+  'hot-hedge': [
+    {name:'黄杨',       icon:'🌿', badge:'经典绿篱', tags:['常绿','耐修剪']},
+    {name:'冬青',       icon:'🌿', badge:'常绿',     tags:['常绿','耐修剪']},
+    {name:'侧柏',       icon:'🌲', badge:'北京乡土', tags:['常绿','耐旱']},
+    {name:'圆柏',       icon:'🌲', badge:'常绿',     tags:['常绿','耐寒']},
+    {name:'大叶女贞',   icon:'🌿', badge:'速生',     tags:['常绿','速生']},
+    {name:'小叶女贞',   icon:'🌿', badge:'绿篱首选', tags:['耐修剪','速生']},
+    {name:'红叶石楠',   icon:'🍁', badge:'彩叶',     tags:['彩叶','常绿']},
+    {name:'金叶女贞',   icon:'🍃', badge:'彩叶',     tags:['彩叶','耐修剪']},
+    {name:'水蜡',       icon:'🌿', badge:'耐寒',     tags:['耐寒','耐修剪']},
+    {name:'沙地柏',     icon:'🌿', badge:'地被',     tags:['常绿','耐旱']},
+    {name:'铺地柏',     icon:'🌿', badge:'低矮地被', tags:['常绿','低矮']},
+    {name:'石楠',       icon:'🌿', badge:'常绿',     tags:['常绿','耐旱']},
+    {name:'北海道黄杨', icon:'🌿', badge:'高档绿篱', tags:['常绿','耐寒']},
+    {name:'龙柏',       icon:'🌲', badge:'造型',     tags:['常绿','耐修剪']},
+    {name:'胡枝子',     icon:'🌿', badge:'北京乡土', tags:['北京乡土','耐旱']},
+  ],
+  'hot-vine': [
+    {name:'爬山虎',   icon:'🍃', badge:'墙面绿化', tags:['速生','秋色叶']},
+    {name:'藤本月季', icon:'🌹', badge:'芳香',     tags:['观花','芳香']},
+    {name:'紫藤',     icon:'🌸', badge:'春花',     tags:['春季观花','芳香']},
+    {name:'铁线莲',   icon:'🌸', badge:'藤本女王', tags:['观花','多品种']},
+    {name:'金银花',   icon:'🌼', badge:'药食两用', tags:['芳香','药用']},
+    {name:'凌霄',     icon:'🌺', badge:'夏花',     tags:['夏季观花','速生']},
+    {name:'木香',     icon:'🌹', badge:'春花',     tags:['春季观花','芳香']},
+    {name:'常春藤',   icon:'🍃', badge:'常绿',     tags:['常绿','耐阴']},
+    {name:'五叶地锦', icon:'🍃', badge:'墙面绿化', tags:['秋色叶','速生']},
+    {name:'南蛇藤',   icon:'🍃', badge:'秋果',     tags:['秋季观果','耐寒']},
+    {name:'扶芳藤',   icon:'🌿', badge:'常绿',     tags:['常绿','耐阴']},
+    {name:'葡萄',     icon:'🍇', badge:'食用',     tags:['食用','观果']},
+    {name:'猕猴桃',   icon:'🥝', badge:'食用',     tags:['食用','观花']},
+    {name:'西番莲',   icon:'🌸', badge:'热带风情', tags:['观花','食用']},
+    {name:'炮仗花',   icon:'🌺', badge:'夏花',     tags:['夏秋观花','速生']},
+  ],
+  'arbor': [
+    {name:'白皮松', icon:'🌲', badge:'北京乡土', tags:['常绿','耐寒','北京适生']},
+    {name:'油松',   icon:'🌲', badge:'常绿',     tags:['常绿','耐旱','北京适生']},
+    {name:'银杏',   icon:'🍃', badge:'活化石',   tags:['秋色叶','长寿','耐寒']},
+    {name:'元宝枫', icon:'🍁', badge:'秋色叶',   tags:['秋色叶','耐寒','观赏']},
+    {name:'海棠',   icon:'🌸', badge:'春花名品', tags:['春季观花','耐寒','北京适生']},
+    {name:'樱花',   icon:'🌸', badge:'春花',     tags:['春季观花','浪漫','耐寒']},
+    {name:'玉兰',   icon:'🌷', badge:'名贵',     tags:['先花后叶','芳香','耐寒']},
+    {name:'国槐',   icon:'🌳', badge:'行道经典', tags:['耐旱','长寿','北京适生']},
+    {name:'柳树',   icon:'🌿', badge:'水景首选', tags:['耐湿','速生','垂枝']},
+    {name:'碧桃',   icon:'🌸', badge:'观花',     tags:['春季观花','鲜艳','耐寒']},
+    {name:'山桃',   icon:'🌸', badge:'早春先花', tags:['早春观花','耐旱','北京适生']},
+    {name:'丁香树', icon:'🌺', badge:'芳香',     tags:['芳香','春季观花','耐寒']},
+    {name:'白蜡',   icon:'🌳', badge:'秋色叶',   tags:['秋色叶','速生','耐寒']},
+    {name:'栾树',   icon:'🌳', badge:'三季景观', tags:['夏花秋果','耐寒','观赏']},
+    {name:'紫叶李', icon:'🌿', badge:'彩叶',     tags:['彩叶','四季观赏','耐寒']},
+  ],
+  'shrub': [
+    {name:'月季',   icon:'🌹', badge:'百花之后', tags:['四季观花','芳香','耐寒']},
+    {name:'绣球',   icon:'💜', badge:'夏季明星', tags:['夏季观花','耐阴','色彩丰富']},
+    {name:'丁香',   icon:'🌸', badge:'芳香名品', tags:['芳香','春季观花','耐寒']},
+    {name:'连翘',   icon:'🌼', badge:'春季先锋', tags:['早春观花','耐寒','速生']},
+    {name:'榆叶梅', icon:'🌸', badge:'春花经典', tags:['春季观花','耐寒','北京适生']},
+    {name:'紫薇',   icon:'🌺', badge:'百日红',   tags:['夏秋观花','耐热','树形优美']},
+    {name:'木槿',   icon:'🌺', badge:'夏花',     tags:['夏秋观花','耐热','耐修剪']},
+    {name:'迎春',   icon:'🌼', badge:'春之使者', tags:['早春观花','耐寒','垂枝']},
+    {name:'棣棠',   icon:'🌼', badge:'耐阴首选', tags:['春季观花','耐阴','金黄色']},
+    {name:'珍珠梅', icon:'🌿', badge:'耐阴灌木', tags:['夏季观花','耐阴','速生']},
+    {name:'锦带花', icon:'🌸', badge:'花繁色艳', tags:['春末观花','耐寒','花量大']},
+    {name:'红瑞木', icon:'🌿', badge:'冬景特色', tags:['冬季观枝','红枝','耐寒']},
+    {name:'黄刺玫', icon:'🌼', badge:'北京乡土', tags:['春季观花','耐旱','北京适生']},
+    {name:'蜡梅',   icon:'🌸', badge:'冬花名品', tags:['冬季观花','芳香','耐寒']},
+    {name:'金银木', icon:'🌿', badge:'四季观赏', tags:['观花观果','耐寒','鸟类食源']},
+  ],
+  'hedge': [
+    {name:'黄杨',       icon:'🌿', badge:'经典绿篱', tags:['常绿','耐修剪']},
+    {name:'冬青',       icon:'🌿', badge:'常绿',     tags:['常绿','耐修剪']},
+    {name:'侧柏',       icon:'🌲', badge:'北京乡土', tags:['常绿','耐旱']},
+    {name:'圆柏',       icon:'🌲', badge:'常绿',     tags:['常绿','耐寒']},
+    {name:'大叶女贞',   icon:'🌿', badge:'速生',     tags:['常绿','速生']},
+    {name:'小叶女贞',   icon:'🌿', badge:'绿篱首选', tags:['耐修剪','速生']},
+    {name:'红叶石楠',   icon:'🍁', badge:'彩叶',     tags:['彩叶','常绿']},
+    {name:'金叶女贞',   icon:'🍃', badge:'彩叶',     tags:['彩叶','耐修剪']},
+    {name:'水蜡',       icon:'🌿', badge:'耐寒',     tags:['耐寒','耐修剪']},
+    {name:'胡枝子',     icon:'🌿', badge:'北京乡土', tags:['北京乡土','耐旱']},
+    {name:'沙地柏',     icon:'🌿', badge:'地被',     tags:['常绿','耐旱']},
+    {name:'铺地柏',     icon:'🌿', badge:'低矮地被', tags:['常绿','低矮']},
+    {name:'石楠',       icon:'🌿', badge:'常绿',     tags:['常绿','耐旱']},
+    {name:'北海道黄杨', icon:'🌿', badge:'高档绿篱', tags:['常绿','耐寒']},
+    {name:'龙柏',       icon:'🌲', badge:'造型',     tags:['常绿','耐修剪']},
+  ],
+  'herb-flower': [
+    {name:'薰衣草', icon:'🌸', badge:'芳香',   tags:['芳香','观花','耐旱']},
+    {name:'鼠尾草', icon:'🌸', badge:'芳香',   tags:['芳香','夏季观花']},
+    {name:'芍药',   icon:'🌸', badge:'名贵',   tags:['春季观花','芳香','多年生']},
+    {name:'鸢尾',   icon:'🌸', badge:'优雅',   tags:['春季观花','耐湿','多年生']},
+    {name:'大丽花', icon:'🌺', badge:'艳丽',   tags:['夏秋观花','色彩丰富']},
+    {name:'向日葵', icon:'🌻', badge:'阳光',   tags:['夏季观花','大气']},
+    {name:'波斯菊', icon:'🌸', badge:'秋花',   tags:['秋季观花','易栽培']},
+    {name:'金鸡菊', icon:'🌼', badge:'低养护', tags:['夏季观花','耐旱','低养护']},
+    {name:'松果菊', icon:'🌼', badge:'多年生', tags:['夏季观花','耐旱','多年生']},
+    {name:'天人菊', icon:'🌼', badge:'耐旱',   tags:['夏秋观花','耐旱']},
+    {name:'醉蝶花', icon:'🌸', badge:'夏花',   tags:['夏季观花','奇特']},
+    {name:'百日草', icon:'🌺', badge:'长花期', tags:['长花期','色彩丰富']},
+    {name:'凤仙花', icon:'🌸', badge:'经典',   tags:['夏季观花','易栽培']},
+    {name:'万寿菊', icon:'🌼', badge:'驱虫',   tags:['夏秋观花','驱虫']},
+    {name:'孔雀草', icon:'🌼', badge:'矮生',   tags:['夏秋观花','耐热']},
+  ],
+  'bulb': [
+    {name:'郁金香',    icon:'🌷', badge:'春花女王', tags:['春季观花','名贵']},
+    {name:'水仙',      icon:'🌼', badge:'清雅',     tags:['冬春观花','芳香']},
+    {name:'风信子',    icon:'🌸', badge:'芳香',     tags:['春季观花','芳香']},
+    {name:'百合',      icon:'🌷', badge:'纯洁',     tags:['夏季观花','芳香']},
+    {name:'唐菖蒲',    icon:'🌺', badge:'剑兰',     tags:['夏秋观花','切花']},
+    {name:'葡萄风信子',icon:'🔵', badge:'迷你',     tags:['春季观花','蓝紫色']},
+    {name:'朱顶红',    icon:'🌺', badge:'热带风情', tags:['春夏观花','大花']},
+    {name:'番红花',    icon:'🌸', badge:'珍贵',     tags:['春季观花','药用']},
+    {name:'美人蕉',    icon:'🌺', badge:'热带',     tags:['夏秋观花','热带风情']},
+    {name:'晚香玉',    icon:'🌸', badge:'夜香',     tags:['夏秋观花','芳香']},
+    {name:'球根鸢尾',  icon:'🌸', badge:'优雅',     tags:['春季观花','耐寒']},
+    {name:'花毛茛',    icon:'🌺', badge:'欧式',     tags:['春季观花','多重瓣']},
+    {name:'洋水仙',    icon:'🌼', badge:'春花',     tags:['春季观花','耐寒']},
+    {name:'贝母',      icon:'🌸', badge:'珍稀',     tags:['春季观花','药用']},
+    {name:'大丽花球根',icon:'🌺', badge:'球根',     tags:['夏秋观花','色彩丰富']},
+  ],
+  'ground-cov': [
+    {name:'玉簪',       icon:'🍃', badge:'耐阴首选', tags:['耐阴','观叶','多年生']},
+    {name:'麦冬',       icon:'🌿', badge:'常绿地被', tags:['常绿','耐阴','低养护']},
+    {name:'葱兰',       icon:'🌼', badge:'夏花',     tags:['夏季观花','耐湿']},
+    {name:'石竹',       icon:'🌸', badge:'春花',     tags:['春季观花','耐旱']},
+    {name:'景天',       icon:'🌿', badge:'多肉质',   tags:['耐旱','低养护']},
+    {name:'八宝景天',   icon:'🌸', badge:'秋花',     tags:['秋季观花','耐旱']},
+    {name:'金叶过路黄', icon:'🍃', badge:'彩叶',     tags:['彩叶','耐湿']},
+    {name:'马蔺',       icon:'🌸', badge:'耐盐碱',   tags:['耐盐碱','耐旱','北京适生']},
+    {name:'萱草',       icon:'🌼', badge:'多年生',   tags:['夏季观花','耐旱','多年生']},
+    {name:'矾根',       icon:'🍃', badge:'彩叶',     tags:['彩叶','耐阴']},
+    {name:'白三叶',     icon:'🍀', badge:'草坪伴生', tags:['耐踩','低养护']},
+    {name:'二月兰',     icon:'🌸', badge:'早春',     tags:['早春观花','耐阴']},
+    {name:'蒲公英',     icon:'🌼', badge:'乡土',     tags:['北京乡土','食用']},
+    {name:'虎耳草',     icon:'🍃', badge:'耐阴',     tags:['耐阴','湿润']},
+    {name:'活血丹',     icon:'🌿', badge:'药用',     tags:['耐阴','药用']},
+  ],
+  'lawn': [
+    {name:'早熟禾',      icon:'🌾', badge:'冷季型',   tags:['耐寒','精细草坪']},
+    {name:'高羊茅',      icon:'🌾', badge:'粗放型',   tags:['耐热耐寒','耐旱']},
+    {name:'黑麦草',      icon:'🌾', badge:'冷季型',   tags:['发芽快','绿期长']},
+    {name:'结缕草',      icon:'🌾', badge:'暖季型',   tags:['耐热','耐践踏']},
+    {name:'狗牙根',      icon:'🌾', badge:'暖季型',   tags:['耐热','耐旱']},
+    {name:'剪股颖',      icon:'🌾', badge:'高档草坪', tags:['精细','耐低剪']},
+    {name:'野牛草',      icon:'🌾', badge:'低养护',   tags:['耐旱','低养护']},
+    {name:'假俭草',      icon:'🌾', badge:'暖季型',   tags:['耐阴','耐践踏']},
+    {name:'地毯草',      icon:'🌾', badge:'暖季型',   tags:['耐阴','低养护']},
+    {name:'钝叶草',      icon:'🌾', badge:'耐阴',     tags:['耐阴','耐湿']},
+    {name:'匍匐翦股颖',  icon:'🌾', badge:'球场草坪', tags:['精细','耐低剪']},
+    {name:'细弱剪股颖',  icon:'🌾', badge:'精细',     tags:['精细','耐寒']},
+    {name:'草地早熟禾',  icon:'🌾', badge:'北方首选', tags:['耐寒','绿期长']},
+    {name:'紫羊茅',      icon:'🌾', badge:'冷季型',   tags:['耐寒','耐阴']},
+    {name:'混播草坪',    icon:'🟩', badge:'综合型',   tags:['四季常绿','耐寒耐热']},
+  ],
+  'vine': [
+    {name:'爬山虎',   icon:'🍃', badge:'墙面绿化', tags:['速生','秋色叶']},
+    {name:'藤本月季', icon:'🌹', badge:'芳香',     tags:['观花','芳香']},
+    {name:'紫藤',     icon:'🌸', badge:'春花',     tags:['春季观花','芳香']},
+    {name:'铁线莲',   icon:'🌸', badge:'藤本女王', tags:['观花','多品种']},
+    {name:'金银花',   icon:'🌼', badge:'药食两用', tags:['芳香','药用']},
+    {name:'凌霄',     icon:'🌺', badge:'夏花',     tags:['夏季观花','速生']},
+    {name:'木香',     icon:'🌹', badge:'春花',     tags:['春季观花','芳香']},
+    {name:'常春藤',   icon:'🍃', badge:'常绿',     tags:['常绿','耐阴']},
+    {name:'五叶地锦', icon:'🍃', badge:'墙面绿化', tags:['秋色叶','速生']},
+    {name:'南蛇藤',   icon:'🍃', badge:'秋果',     tags:['秋季观果','耐寒']},
+    {name:'扶芳藤',   icon:'🌿', badge:'常绿',     tags:['常绿','耐阴']},
+    {name:'葡萄',     icon:'🍇', badge:'食用',     tags:['食用','观果']},
+    {name:'猕猴桃',   icon:'🥝', badge:'食用',     tags:['食用','观花']},
+    {name:'西番莲',   icon:'🌸', badge:'热带风情', tags:['观花','食用']},
+    {name:'炮仗花',   icon:'🌺', badge:'夏花',     tags:['夏秋观花','速生']},
+  ],
+  'aquatic': [
+    {name:'睡莲',     icon:'🪷', badge:'水景经典',    tags:['观花','浮水植物']},
+    {name:'荷花',     icon:'🪷', badge:'出淤泥而不染', tags:['观花','芳香']},
+    {name:'菖蒲',     icon:'🌿', badge:'水生地被',    tags:['耐湿','观叶']},
+    {name:'芦苇',     icon:'🌾', badge:'自然野趣',    tags:['耐湿','高大']},
+    {name:'水葱',     icon:'🌿', badge:'挺水植物',    tags:['耐湿','挺水']},
+    {name:'千屈菜',   icon:'🌸', badge:'夏花',        tags:['夏季观花','耐湿']},
+    {name:'黄菖蒲',   icon:'🌼', badge:'水边首选',    tags:['春季观花','耐湿']},
+    {name:'再力花',   icon:'🌸', badge:'挺水植物',    tags:['夏季观花','高大']},
+    {name:'梭鱼草',   icon:'🔵', badge:'挺水植物',    tags:['夏秋观花','耐湿']},
+    {name:'花叶芦竹', icon:'🌾', badge:'彩叶',        tags:['彩叶','挺水']},
+    {name:'水生鸢尾', icon:'🌸', badge:'优雅',        tags:['春季观花','耐湿']},
+    {name:'浮萍',     icon:'🍃', badge:'浮水植物',    tags:['净水','浮水']},
+    {name:'萍蓬草',   icon:'🌼', badge:'浮水植物',    tags:['观花','浮水']},
+    {name:'慈姑',     icon:'🌿', badge:'食用',        tags:['食用','挺水']},
+    {name:'香蒲',     icon:'🌾', badge:'观赏',        tags:['观果','挺水']},
+  ],
+  'bamboo': [
+    {name:'刚竹',    icon:'🎋', badge:'高大',     tags:['常绿','高大','北京适生']},
+    {name:'毛竹',    icon:'🎋', badge:'经典',     tags:['常绿','速生','材用']},
+    {name:'紫竹',    icon:'🎋', badge:'特色',     tags:['常绿','观秆','紫色']},
+    {name:'金镶玉竹',icon:'🎋', badge:'名贵',     tags:['常绿','金黄秆','观赏']},
+    {name:'早园竹',  icon:'🎋', badge:'北京适生', tags:['耐寒','速生','北京适生']},
+    {name:'箬竹',    icon:'🎋', badge:'地被竹',   tags:['常绿','低矮','耐阴']},
+    {name:'凤尾竹',  icon:'🎋', badge:'优雅',     tags:['常绿','小型','优雅']},
+    {name:'菲白竹',  icon:'🎋', badge:'彩叶',     tags:['常绿','彩叶','低矮']},
+    {name:'铺地竹',  icon:'🎋', badge:'地被竹',   tags:['常绿','低矮','耐寒']},
+    {name:'业平竹',  icon:'🎋', badge:'高大',     tags:['常绿','高大','耐寒']},
+    {name:'矢竹',    icon:'🎋', badge:'中型',     tags:['常绿','耐寒']},
+    {name:'唐竹',    icon:'🎋', badge:'观赏',     tags:['常绿','观赏']},
+    {name:'方竹',    icon:'🎋', badge:'奇特',     tags:['方形竹秆','奇特']},
+    {name:'斑竹',    icon:'🎋', badge:'文化',     tags:['常绿','观秆','文化']},
+    {name:'茶秆竹',  icon:'🎋', badge:'工艺',     tags:['常绿','材用']},
+  ],
+  'orn-grass': [
+    {name:'狼尾草',      icon:'🌾', badge:'秋季观赏', tags:['夏秋观赏','耐旱']},
+    {name:'芒草',        icon:'🌾', badge:'高大',     tags:['秋季观赏','高大']},
+    {name:'蒲苇',        icon:'🌾', badge:'高大',     tags:['秋季观赏','高大']},
+    {name:'细叶芒',      icon:'🌾', badge:'优雅',     tags:['四季观赏','优雅']},
+    {name:'花叶芒',      icon:'🌾', badge:'彩叶',     tags:['彩叶','观赏']},
+    {name:'血草',        icon:'🌾', badge:'彩色',     tags:['红色叶','耐湿']},
+    {name:'蓝羊茅',      icon:'🌾', badge:'蓝色',     tags:['蓝灰色叶','耐旱']},
+    {name:'晨光芒',      icon:'🌾', badge:'彩叶',     tags:['金边叶','优雅']},
+    {name:'柳枝稷',      icon:'🌾', badge:'北美',     tags:['秋色叶','耐湿']},
+    {name:'须芒草',      icon:'🌾', badge:'秋景',     tags:['秋季观赏','耐旱']},
+    {name:'金叶苔草',    icon:'🌾', badge:'彩叶',     tags:['金黄色','耐阴']},
+    {name:'棕叶苔草',    icon:'🌾', badge:'耐阴',     tags:['棕色叶','耐阴']},
+    {name:'细茎针茅',    icon:'🌾', badge:'飘逸',     tags:['飘逸','耐旱']},
+    {name:'墨西哥羽毛草',icon:'🌾', badge:'精致',     tags:['飘逸','精致']},
+    {name:'花叶燕麦草',  icon:'🌾', badge:'彩叶',     tags:['彩叶','耐阴']},
+  ],
+  'perennial': [
+    {name:'芍药',      icon:'🌸', badge:'名贵',   tags:['春季观花','芳香','多年生']},
+    {name:'鸢尾',      icon:'🌸', badge:'优雅',   tags:['春季观花','多年生']},
+    {name:'萱草',      icon:'🌼', badge:'多年生', tags:['夏季观花','耐旱','多年生']},
+    {name:'玉簪',      icon:'🍃', badge:'耐阴',   tags:['耐阴','观叶','多年生']},
+    {name:'松果菊',    icon:'🌼', badge:'多年生', tags:['夏季观花','耐旱','多年生']},
+    {name:'金鸡菊',    icon:'🌼', badge:'低养护', tags:['夏季观花','耐旱','低养护']},
+    {name:'假龙头',    icon:'🌸', badge:'秋花',   tags:['秋季观花','多年生']},
+    {name:'千屈菜',    icon:'🌸', badge:'水边',   tags:['夏季观花','耐湿']},
+    {name:'柳叶马鞭草',icon:'🌸', badge:'浪漫',   tags:['夏秋观花','紫色']},
+    {name:'落新妇',    icon:'🌸', badge:'耐阴',   tags:['夏季观花','耐阴']},
+    {name:'耧斗菜',    icon:'🌸', badge:'优雅',   tags:['春季观花','耐阴']},
+    {name:'飞燕草',    icon:'🌸', badge:'蓝色',   tags:['春季观花','蓝色']},
+    {name:'荷包牡丹',  icon:'🌸', badge:'特色',   tags:['春季观花','耐阴']},
+    {name:'蓍草',      icon:'🌼', badge:'多年生', tags:['夏季观花','耐旱']},
+    {name:'紫菀',      icon:'🌸', badge:'秋花',   tags:['秋季观花','多年生']},
+  ],
+  'annual': [
+    {name:'波斯菊', icon:'🌸', badge:'秋花',   tags:['秋季观花','易栽培']},
+    {name:'百日草', icon:'🌺', badge:'长花期', tags:['长花期','色彩丰富']},
+    {name:'向日葵', icon:'🌻', badge:'阳光',   tags:['夏季观花','大气']},
+    {name:'万寿菊', icon:'🌼', badge:'驱虫',   tags:['夏秋观花','驱虫']},
+    {name:'孔雀草', icon:'🌼', badge:'矮生',   tags:['夏秋观花','耐热']},
+    {name:'凤仙花', icon:'🌸', badge:'经典',   tags:['夏季观花','易栽培']},
+    {name:'矮牵牛', icon:'🌸', badge:'热销',   tags:['四季观花','色彩丰富']},
+    {name:'金鱼草', icon:'🌸', badge:'春花',   tags:['春季观花','耐寒']},
+    {name:'三色堇', icon:'🌸', badge:'冬春花', tags:['冬春观花','耐寒']},
+    {name:'雏菊',   icon:'🌼', badge:'可爱',   tags:['春季观花','耐寒']},
+    {name:'石竹',   icon:'🌸', badge:'春花',   tags:['春季观花','耐旱']},
+    {name:'羽衣甘蓝',icon:'🍃',badge:'观叶',  tags:['冬季观叶','彩色']},
+    {name:'藿香蓟', icon:'🔵', badge:'蓝色',   tags:['夏秋观花','蓝紫色']},
+    {name:'醉蝶花', icon:'🌸', badge:'夏花',   tags:['夏季观花','奇特']},
+    {name:'翠菊',   icon:'🌸', badge:'秋花',   tags:['秋季观花','北京适生']},
+  ],
+  'fern': [
+    {name:'肾蕨',   icon:'🌿', badge:'常见',    tags:['耐阴','常绿','室内外']},
+    {name:'铁线蕨', icon:'🌿', badge:'精致',    tags:['耐阴','精致','室内']},
+    {name:'凤尾蕨', icon:'🌿', badge:'观叶',    tags:['耐阴','观叶']},
+    {name:'鸟巢蕨', icon:'🌿', badge:'热带风情',tags:['耐阴','大型叶']},
+    {name:'槲蕨',   icon:'🌿', badge:'附生',    tags:['附生','耐阴']},
+    {name:'贯众',   icon:'🌿', badge:'北京乡土',tags:['耐阴','北京适生']},
+    {name:'紫萁',   icon:'🌿', badge:'蕨类经典',tags:['耐湿','观叶']},
+    {name:'荚果蕨', icon:'🌿', badge:'北方蕨',  tags:['耐寒','耐阴']},
+    {name:'蹄盖蕨', icon:'🌿', badge:'耐寒',    tags:['耐寒','耐阴']},
+    {name:'狗脊蕨', icon:'🌿', badge:'大型',    tags:['耐阴','大型']},
+    {name:'水龙骨', icon:'🌿', badge:'附生',    tags:['附生','耐旱']},
+    {name:'石韦',   icon:'🌿', badge:'药用',    tags:['药用','耐旱']},
+    {name:'卷柏',   icon:'🌿', badge:'复苏植物',tags:['耐旱','奇特']},
+    {name:'翠云草', icon:'🌿', badge:'铺地',    tags:['耐阴','铺地']},
+    {name:'桫椤',   icon:'🌿', badge:'活化石',  tags:['珍稀','热带']},
+  ],
+  'fruit': [
+    {name:'苹果',   icon:'🍎', badge:'家庭果园', tags:['食用','观花','北京适生']},
+    {name:'梨',     icon:'🍐', badge:'家庭果园', tags:['食用','春花']},
+    {name:'桃',     icon:'🍑', badge:'家庭果园', tags:['食用','春花']},
+    {name:'樱桃',   icon:'🍒', badge:'高价值',   tags:['食用','春花']},
+    {name:'柿子',   icon:'🟠', badge:'秋果',     tags:['食用','秋果']},
+    {name:'石榴',   icon:'🔴', badge:'观果',     tags:['食用','观花观果']},
+    {name:'无花果', icon:'🍈', badge:'耐旱',     tags:['食用','耐旱']},
+    {name:'葡萄',   icon:'🍇', badge:'廊架',     tags:['食用','廊架']},
+    {name:'枣树',   icon:'🌳', badge:'北京传统', tags:['食用','耐旱','北京适生']},
+    {name:'杏树',   icon:'🌸', badge:'早春花',   tags:['食用','春花']},
+    {name:'李树',   icon:'🌸', badge:'春花',     tags:['食用','春花']},
+    {name:'核桃',   icon:'🌰', badge:'食用',     tags:['食用','营养']},
+    {name:'板栗',   icon:'🌰', badge:'食用',     tags:['食用','观赏']},
+    {name:'山楂',   icon:'🍎', badge:'北京传统', tags:['食用','药用','北京适生']},
+    {name:'海棠果', icon:'🍎', badge:'观赏食用', tags:['食用','观果']},
+  ],
+  'herb': [
+    {name:'薰衣草', icon:'🌸', badge:'芳香',    tags:['芳香','驱虫','观花']},
+    {name:'迷迭香', icon:'🌿', badge:'厨用',    tags:['芳香','厨用','耐旱']},
+    {name:'薄荷',   icon:'🌱', badge:'清凉',    tags:['芳香','食用','耐湿']},
+    {name:'罗勒',   icon:'🌿', badge:'厨用',    tags:['芳香','厨用']},
+    {name:'鼠尾草', icon:'🌸', badge:'芳香',    tags:['芳香','驱虫']},
+    {name:'百里香', icon:'🌿', badge:'厨用',    tags:['芳香','厨用','耐旱']},
+    {name:'柠檬草', icon:'🌿', badge:'驱蚊',    tags:['芳香','驱蚊']},
+    {name:'香蜂草', icon:'🌿', badge:'芳香',    tags:['芳香','耐寒']},
+    {name:'牛至',   icon:'🌿', badge:'厨用',    tags:['芳香','厨用']},
+    {name:'茴香',   icon:'🌿', badge:'厨用',    tags:['芳香','食用']},
+    {name:'芫荽',   icon:'🌿', badge:'厨用',    tags:['食用','一年生']},
+    {name:'紫苏',   icon:'🌿', badge:'食药两用',tags:['食用','药用']},
+    {name:'香茅',   icon:'🌾', badge:'驱蚊',    tags:['芳香','驱蚊']},
+    {name:'马郁兰', icon:'🌿', badge:'厨用',    tags:['芳香','厨用']},
+    {name:'藿香',   icon:'🌿', badge:'药用',    tags:['芳香','药用']},
+  ],
+  'indoor-plant': [
+    {name:'绿萝',     icon:'🌿', badge:'净化首选', tags:['净化空气','耐阴','易养']},
+    {name:'虎皮兰',   icon:'🌿', badge:'净化空气', tags:['净化空气','耐旱','耐阴']},
+    {name:'发财树',   icon:'🌳', badge:'招财纳福', tags:['观赏','耐旱','吉祥']},
+    {name:'龟背竹',   icon:'🌿', badge:'热带风情', tags:['大叶','热带','耐阴']},
+    {name:'橡皮树',   icon:'🌿', badge:'大叶观赏', tags:['大叶','净化空气','耐旱']},
+    {name:'吊兰',     icon:'🌿', badge:'净化空气', tags:['净化空气','耐阴','易养']},
+    {name:'文竹',     icon:'🌿', badge:'雅致',     tags:['雅致','耐阴','细叶']},
+    {name:'富贵竹',   icon:'🎋', badge:'吉祥',     tags:['吉祥','水培','耐阴']},
+    {name:'金钱树',   icon:'🌿', badge:'耐旱',     tags:['耐旱','光泽叶','易养']},
+    {name:'合果芋',   icon:'🌿', badge:'耐阴',     tags:['耐阴','彩叶','易养']},
+    {name:'鹤望兰',   icon:'🌺', badge:'名贵',     tags:['名贵','观花','热带']},
+    {name:'朱蕉',     icon:'🌿', badge:'彩叶',     tags:['彩叶','热带','观赏']},
+    {name:'花叶万年青',icon:'🌿',badge:'耐阴',     tags:['耐阴','彩叶','易养']},
+    {name:'棕竹',     icon:'🌿', badge:'优雅',     tags:['优雅','耐阴','中式']},
+    {name:'春羽',     icon:'🌿', badge:'大叶热带', tags:['大叶','热带','耐阴']},
+  ],
+  'succulent': [
+    {name:'景天',     icon:'🪴', badge:'经典多肉', tags:['耐旱','萌趣','低养护']},
+    {name:'石莲花',   icon:'🪴', badge:'玫瑰形',   tags:['耐旱','萌趣','多品种']},
+    {name:'玉露',     icon:'🪴', badge:'透明质感', tags:['耐阴','透明叶','精致']},
+    {name:'芦荟',     icon:'🪴', badge:'药食两用', tags:['耐旱','药用','实用']},
+    {name:'仙人掌',   icon:'🌵', badge:'沙漠之王', tags:['耐旱','耐热','个性']},
+    {name:'十二卷',   icon:'🪴', badge:'条纹',     tags:['耐阴','条纹叶','小型']},
+    {name:'虹之玉',   icon:'🪴', badge:'红叶',     tags:['耐旱','红叶','萌趣']},
+    {name:'熊童子',   icon:'🪴', badge:'可爱',     tags:['可爱','绒毛叶','萌趣']},
+    {name:'条纹十二卷',icon:'🪴',badge:'观叶',     tags:['耐阴','观叶','小型']},
+    {name:'姬星美人', icon:'🪴', badge:'迷你',     tags:['迷你','蓝绿色','萌趣']},
+    {name:'翡翠景天', icon:'🪴', badge:'绿色经典', tags:['耐旱','绿色','低养护']},
+    {name:'筒叶花月', icon:'🪴', badge:'独特',     tags:['独特','筒形叶','观赏']},
+    {name:'山地玫瑰', icon:'🪴', badge:'名贵',     tags:['名贵','玫瑰形','精致']},
+    {name:'黑法师',   icon:'🪴', badge:'暗黑风格', tags:['黑色叶','个性','名贵']},
+    {name:'龙舌兰',   icon:'🌵', badge:'大型',     tags:['大型','耐旱','个性']},
+  ]
+};
+
+function buildRealCard(plant, catId, idx) {
+  const cid = `card-${catId}-r${idx}`;
+  cardState[cid] = { price: plant.sizes[0].price, spec: plant.sizes[0].spec };
+  const tagsHtml = plant.tags.map(t => `<span class="p-tag">${t}</span>`).join('');
+  const sizeBtns = plant.sizes.map((s, i) =>
+    `<button class="sz-btn${i===0?' active':''}" onclick="selectSize('${cid}',${s.price},'${s.spec}',this)">${s.label}</button>`
+  ).join('');
+  return `
+    <div class="p-card" id="${cid}">
+      <div class="p-img">
+        <div class="p-glow"></div>
+        <div class="p-icon">${plant.icon}</div>
+        <div class="p-img-lbl">Plant Image</div>
+        <div class="p-badge">${plant.badge}</div>
+      </div>
+      <div class="p-body">
+        <div class="p-cat">热门乔木</div>
+        <div class="p-name">${plant.name}</div>
+        <div class="p-latin">${plant.latin}</div>
+        <div class="p-hr"></div>
+        <div class="p-tags">${tagsHtml}</div>
+        <div class="sz-btns">${sizeBtns}</div>
+        <div class="p-spec" id="${cid}-spec">${plant.sizes[0].spec}</div>
+        <div class="p-foot">
+          <div class="p-price"><sup>¥</sup><span id="${cid}-price">${plant.sizes[0].price.toLocaleString()}</span><span>/株</span></div>
+          <button class="p-btn" onclick="addToCartByState('${cid}','${plant.name}','${plant.icon}')">+ 加入</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function selectSize(cardId, price, spec, btn) {
+  cardState[cardId] = { price, spec };
+  btn.parentElement.querySelectorAll('.sz-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(cardId + '-price').textContent = price.toLocaleString();
+  document.getElementById(cardId + '-spec').textContent = spec;
+}
+
+function addToCartByState(cardId, name, icon) {
+  const state = cardState[cardId];
+  if (!state) return;
+  const activeBtn = document.querySelector(`#${cardId} .sz-btn.active`);
+  const sizeLabel = activeBtn ? activeBtn.textContent.trim() : '';
+  const key = `${cardId}|${sizeLabel}`;
+  addToCart(key, `${name}（${sizeLabel}）`, icon, state.price);
+}
+
+function buildSimpleCard(plant, catId, idx) {
+  const cid = `card-${catId}-r${idx}`;
+  const tagsHtml = (plant.tags || []).map(t => `<span class="p-tag">${t}</span>`).join('');
+  return `
+    <div class="p-card" id="${cid}">
+      <div class="p-img">
+        <div class="p-glow"></div>
+        <div class="p-icon">${plant.icon || '🌿'}</div>
+        <div class="p-img-lbl">Plant Image</div>
+        ${plant.badge ? `<div class="p-badge">${plant.badge}</div>` : ''}
+      </div>
+      <div class="p-body">
+        <div class="p-name" style="margin-top:4px">${plant.name}</div>
+        <div class="p-latin">${plant.latin || ''}</div>
+        <div class="p-hr"></div>
+        ${tagsHtml ? `<div class="p-tags">${tagsHtml}</div>` : ''}
+        <div class="p-foot">
+          <div class="p-price" style="font-size:12px;color:var(--text-faint);letter-spacing:1.5px">价格待定</div>
+          <button class="p-btn" onclick="scrollToOrder()">咨询报价</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ─── BUILD SIDEBAR ───
+function buildNav() {
+  const nav = document.getElementById('sb-nav');
+  let html = '';
+  GROUPS.forEach((g, gi) => {
+    html += `
+      <div class="sb-group">
+        <div class="sb-ghd ${gi===0?'open':''}" onclick="toggleGroup('${g.id}',this)">
+          <span>${g.name}</span>
+          <span class="sb-arrow">›</span>
+        </div>
+        <div class="sb-items ${gi===0?'open':''}" id="sbg-${g.id}">
+          ${g.cats.map(c=>`<button class="sb-item" id="sbi-${c.id}" onclick="showSection('${c.id}')">${c.name}</button>`).join('')}
+        </div>
+      </div>
+      <div class="sb-div"></div>
+    `;
+  });
+  nav.innerHTML = html;
+}
+
+function toggleGroup(id, el) {
+  el.classList.toggle('open');
+  const items = document.getElementById(`sbg-${id}`);
+  items.classList.toggle('open');
+}
+
+// ─── BUILD PRODUCT SECTIONS ───
+function buildSections() {
+  const container = document.getElementById('prod-container');
+  let html = '';
+  GROUPS.forEach(g => {
+    g.cats.forEach(cat => {
+      html += `<div class="prod-section" id="sec-${cat.id}">
+        <div class="sec-hd">
+          <div class="sec-crumb">${g.name} · ${cat.crumb}</div>
+          <div class="sec-title"><em>${cat.name}</em></div>
+          <div class="sec-desc">${cat.desc}</div>
+        </div>
+        <div class="prod-grid" id="grid-${cat.id}"></div>
+      </div>`;
+    });
+  });
+  container.innerHTML = html;
+  // populate cards
+  GROUPS.forEach(g => {
+    g.cats.forEach(cat => {
+      const grid = document.getElementById(`grid-${cat.id}`);
+      let cards = '';
+      if (REAL_PLANTS[cat.id]) {
+        // use real plant data with size selector
+        REAL_PLANTS[cat.id].forEach((plant, idx) => {
+          cards += plant.sizes ? buildRealCard(plant, cat.id, idx) : buildSimpleCard(plant, cat.id, idx);
+        });
+      } else {
+        // placeholder cards for categories not yet filled
+        for (let i = 1; i <= 8; i++) {
+          const price = Math.round(cat.priceBase * PRICE_MULT[(i-1)%8] / 10) * 10;
+          const unit = cat.priceBase >= 400 ? '/株' : cat.priceBase >= 80 ? '/株' : '/盆';
+          const badges = ['精选','热销','推荐','新品','限量','名品','甄选','当季'];
+          cards += `
+            <div class="p-card" id="card-${cat.id}-${i}">
+              <div class="p-img">
+                <div class="p-glow"></div>
+                <div class="p-icon">${cat.icon}</div>
+                <div class="p-img-lbl">Plant Image</div>
+                <div class="p-badge">${badges[(i-1)%8]}</div>
+              </div>
+              <div class="p-body">
+                <div class="p-cat">${cat.name}</div>
+                <div class="p-name">植物名称 ${i}</div>
+                <div class="p-latin">Species name sp. var. ${i}</div>
+                <div class="p-hr"></div>
+                <div class="p-tags">
+                  ${cat.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}
+                </div>
+                <div class="p-foot">
+                  <div class="p-price"><sup>¥</sup>${price}<span>${unit}</span></div>
+                  <button class="p-btn" onclick="addToCart('${cat.id}-${i}','植物名称 ${i}','${cat.icon}',${price})">+ 加入</button>
+                </div>
+              </div>
+            </div>`;
+        }
+      }
+      grid.innerHTML = cards;
+    });
+  });
+}
+
+// ─── SECTION SWITCHING ───
+let activeSec = null;
+function showSection(id) {
+  // hide welcome
+  document.getElementById('sec-welcome').style.display = 'none';
+  // hide previous
+  if (activeSec) document.getElementById(`sec-${activeSec}`)?.classList.remove('active');
+  // show new
+  document.getElementById(`sec-${id}`)?.classList.add('active');
+  activeSec = id;
+  // update sidebar
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+  document.getElementById(`sbi-${id}`)?.classList.add('active');
+  // scroll top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── CART ───
+const cart = {};
+
+function addToCart(id, name, icon, price) {
+  if (cart[id]) cart[id].qty++;
+  else cart[id] = { name, icon, price, qty: 1 };
+  renderCart();
+  showToast(`${icon} 「${name}」已加入清单`);
+}
+
+function changeQty(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
+  renderCart();
+}
+
+function clearCart() {
+  Object.keys(cart).forEach(k => delete cart[k]);
+  renderCart();
+}
+
+function renderCart() {
+  const keys = Object.keys(cart);
+  const total = keys.reduce((s,k)=>s+cart[k].price*cart[k].qty,0);
+  const totalQty = keys.reduce((s,k)=>s+cart[k].qty,0);
+  document.getElementById('hd-cart-count').textContent = totalQty;
+
+  const itemsEl = document.getElementById('cp-items');
+  const sumEl = document.getElementById('cp-summary');
+
+  if (!keys.length) {
+    itemsEl.innerHTML = `<div class="cp-empty"><div class="cp-empty-icon">🌱</div><div class="cp-empty-txt">尚未选购植物<br>从左侧分类中挑选您的品种</div></div>`;
+    sumEl.style.display = 'none';
+    return;
+  }
+
+  itemsEl.innerHTML = keys.map(k => {
+    const it = cart[k];
+    return `<div class="cp-item">
+      <div class="cp-item-icon">${it.icon}</div>
+      <div class="cp-item-info">
+        <div class="cp-item-name">${it.name}</div>
+        <div class="cp-item-uprice">¥${it.price} / 株</div>
+      </div>
+      <div class="cp-qty">
+        <button class="cp-qbtn" onclick="changeQty('${k}',-1)">−</button>
+        <span class="cp-qnum">${it.qty}</span>
+        <button class="cp-qbtn" onclick="changeQty('${k}',1)">+</button>
+      </div>
+      <div class="cp-sub-price">¥${it.price*it.qty}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('cp-count').textContent = totalQty + '件';
+  document.getElementById('cp-total').textContent = total.toLocaleString();
+  sumEl.style.display = 'block';
+}
+
+// ─── UTILS ───
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+function scrollToOrder() { focusContact(); }
+
+function focusContact() {
+  document.getElementById('cp-name')?.focus();
+}
+
+function submitContact() {
+  const name  = document.getElementById('cp-name').value.trim();
+  const phone = document.getElementById('cp-phone').value.trim();
+  if (!name)  { showToast('⚠ 请填写您的姓名'); document.getElementById('cp-name').focus(); return; }
+  if (!phone) { showToast('⚠ 请填写手机号码'); document.getElementById('cp-phone').focus(); return; }
+  document.getElementById('cp-contact-form').style.display = 'none';
+  document.getElementById('cp-contact-success').style.display = 'block';
+  showToast('✓ 选单已提交，30分钟内联系您');
+}
+
+// ─── INIT ───
+buildNav();
+buildSections();
+// default: open first group, select first cat
+showSection(GROUPS[0].cats[0].id);
+</script>
+</body>
+</html>
