@@ -642,6 +642,14 @@ main {
   </div>
 </div>
 
+<!-- Netlify 表单（隐藏，用于静态检测） -->
+<form name="yjg-contact" netlify netlify-honeypot="bot-field" hidden>
+  <input name="姓名">
+  <input name="手机">
+  <input name="选购清单">
+  <input name="bot-field">
+</form>
+
 <!-- ═══════════════ MOBILE CART BAR ═══════════════ -->
 <div class="mob-overlay" id="mob-overlay" onclick="toggleMobCart()"></div>
 <div class="mob-cart-bar" id="mob-cart-bar" onclick="toggleMobCart()">
@@ -1613,6 +1621,20 @@ function submitContact() {
   const phone = document.getElementById('cp-phone').value.trim();
   if (!name)  { showToast('⚠ 请填写您的姓名'); document.getElementById('cp-name').focus(); return; }
   if (!phone) { showToast('⚠ 请填写手机号码'); document.getElementById('cp-phone').focus(); return; }
+
+  const cartItems = Object.values(cart).map(i => `${i.name} x${i.qty}（¥${i.price}）`).join('、') || '未选购植物';
+
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      'form-name': 'yjg-contact',
+      '姓名': name,
+      '手机': phone,
+      '选购清单': cartItems
+    }).toString()
+  }).catch(() => {});
+
   document.getElementById('cp-contact-form').style.display = 'none';
   document.getElementById('cp-contact-success').style.display = 'block';
   showToast('✓ 选单已提交，30分钟内联系您');
