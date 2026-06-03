@@ -72,6 +72,12 @@ header::before {
   background: radial-gradient(circle, rgba(201,168,76,.1) 0%, transparent 70%);
   box-shadow: 0 0 12px rgba(201,168,76,.15), inset 0 0 12px rgba(201,168,76,.05);
   font-family: "Georgia", serif;
+  position: relative; overflow: hidden;
+}
+.hd-logo-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain; border-radius: 50%;
 }
 .hd-logo-vline {
   width: 1px; height: 34px; margin: 0 20px; flex-shrink: 0;
@@ -422,6 +428,114 @@ main {
   opacity:0; pointer-events:none; transition:all .3s; z-index:999;
 }
 #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ════════════════════════════════════════
+   MOBILE NAVIGATION
+════════════════════════════════════════ */
+.mob-nav {
+  display: none;
+  position: fixed; top: var(--hh); left: 0; right: 0; z-index: 90;
+  flex-direction: column;
+  background: rgba(5,10,5,.97);
+  border-bottom: 1px solid var(--border);
+}
+.mob-groups {
+  display: flex; overflow-x: auto;
+  border-bottom: 1px solid rgba(201,168,76,.07);
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.mob-groups::-webkit-scrollbar { display: none; }
+.mob-group-btn {
+  flex-shrink: 0; background: none; border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-faint); font-size: 12.5px; letter-spacing: 1px;
+  padding: 12px 20px; cursor: pointer; white-space: nowrap;
+  transition: all .2s; font-family: inherit;
+}
+.mob-group-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+.mob-cats-wrap {
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; padding: 7px 12px;
+  background: rgba(0,0,0,.2);
+}
+.mob-cats-wrap::-webkit-scrollbar { display: none; }
+.mob-cats { display: flex; gap: 6px; }
+.mob-cat-btn {
+  flex-shrink: 0; background: none;
+  border: 1px solid var(--border); border-radius: 20px;
+  color: var(--text-faint); font-size: 11px; letter-spacing: .5px;
+  padding: 5px 14px; cursor: pointer; white-space: nowrap;
+  transition: all .15s; font-family: inherit;
+}
+.mob-cat-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-faint); }
+
+/* ════════════════════════════════════════
+   MOBILE CART BAR (BOTTOM FIXED)
+════════════════════════════════════════ */
+.mob-cart-bar {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 250;
+  height: 56px;
+  background: rgba(5,10,5,.98);
+  border-top: 1px solid var(--border);
+  align-items: center; padding: 0 20px; gap: 12px;
+  cursor: pointer; user-select: none;
+}
+.mcb-icon { font-size: 18px; }
+.mcb-label { flex: 1; font-size: 13px; color: var(--text-dim); letter-spacing: .5px; }
+.mcb-price { font-size: 15px; font-weight: 600; color: var(--gold); }
+.mcb-chevron { font-size: 11px; color: var(--gold-dim); transition: transform .3s; }
+.mcb-chevron.up { transform: rotate(180deg); }
+.mob-overlay {
+  display: none; position: fixed; inset: 0; z-index: 240;
+  background: rgba(0,0,0,.55);
+}
+.mob-overlay.show { display: block; }
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════ */
+@media (max-width: 768px) {
+  aside { display: none !important; }
+  .hd-nav, .hd-ornament { display: none !important; }
+  .hd-inner { padding: 0 16px !important; }
+
+  main {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: calc(var(--hh) + 88px) !important;
+    padding: 18px 12px 72px !important;
+  }
+
+  .cart-panel {
+    position: fixed !important;
+    top: auto !important;
+    bottom: -100% !important;
+    left: 0 !important; right: 0 !important;
+    width: 100% !important; height: 76vh !important; max-height: 76vh !important;
+    border-left: none !important; border-top: 1px solid var(--border) !important;
+    border-radius: 16px 16px 0 0;
+    transition: bottom .38s cubic-bezier(.4,0,.2,1);
+    z-index: 290 !important;
+  }
+  .cart-panel.mob-open { bottom: 0 !important; }
+
+  .prod-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .p-icon { font-size: 28px !important; }
+  .p-name { font-size: 13px !important; }
+  .p-latin { font-size: 9px !important; }
+  .p-price { font-size: 13px !important; }
+  .sz-btn { font-size: 8px !important; padding: 4px 0 !important; letter-spacing: 0 !important; }
+  .sec-title { font-size: 20px !important; }
+  .wl-title { font-size: 24px !important; letter-spacing: 1px !important; }
+  .welcome-sec { min-height: 36vh !important; }
+
+  .mob-nav { display: flex !important; }
+  .mob-cart-bar { display: flex !important; }
+}
 </style>
 </head>
 <body>
@@ -430,7 +544,10 @@ main {
 <header>
   <div class="hd-inner">
     <div class="hd-logo">
-      <div class="hd-emblem">YJG</div>
+      <div class="hd-emblem">
+        <img src="file:///D:/微信小程序/images/yjg-logo.png" class="hd-logo-img" alt="YJG" onerror="this.style.display='none'">
+        YJG
+      </div>
       <div class="hd-logo-vline"></div>
       <div class="hd-logo-txt">
         <h1>YJG 花 园</h1>
@@ -456,6 +573,12 @@ main {
   </div>
   <div class="hd-bar"></div>
 </header>
+
+<!-- ═══════════════ MOBILE NAV ═══════════════ -->
+<div class="mob-nav" id="mob-nav">
+  <div class="mob-groups" id="mob-groups"></div>
+  <div class="mob-cats-wrap"><div class="mob-cats" id="mob-cats"></div></div>
+</div>
 
 <!-- ═══════════════ SIDEBAR ═══════════════ -->
 <aside id="sidebar">
@@ -517,6 +640,15 @@ main {
       ✓ 已收到您的选单<br>我们将在30分钟内联系您
     </div>
   </div>
+</div>
+
+<!-- ═══════════════ MOBILE CART BAR ═══════════════ -->
+<div class="mob-overlay" id="mob-overlay" onclick="toggleMobCart()"></div>
+<div class="mob-cart-bar" id="mob-cart-bar" onclick="toggleMobCart()">
+  <span class="mcb-icon">🛒</span>
+  <span class="mcb-label" id="mcb-label">购物车空空如也</span>
+  <span class="mcb-price" id="mcb-price" style="display:none">¥<span id="mcb-total-num">0</span></span>
+  <span class="mcb-chevron" id="mcb-chevron">▲</span>
 </div>
 
 <div id="toast"></div>
@@ -1457,6 +1589,7 @@ function renderCart() {
   document.getElementById('cp-count').textContent = totalQty + '件';
   document.getElementById('cp-total').textContent = total.toLocaleString();
   sumEl.style.display = 'block';
+  updateMobCartBar();
 }
 
 // ─── UTILS ───
@@ -1485,9 +1618,63 @@ function submitContact() {
   showToast('✓ 选单已提交，30分钟内联系您');
 }
 
+// ─── MOBILE NAV ───
+let mobGroupIdx = 0;
+
+function buildMobNav() {
+  const groupsEl = document.getElementById('mob-groups');
+  if (!groupsEl) return;
+  groupsEl.innerHTML = GROUPS.map((g, i) =>
+    `<button class="mob-group-btn${i===0?' active':''}" onclick="selectMobGroup(${i})">${g.name}</button>`
+  ).join('');
+  renderMobCats(0);
+}
+
+function selectMobGroup(idx) {
+  mobGroupIdx = idx;
+  document.querySelectorAll('.mob-group-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  renderMobCats(idx);
+}
+
+function renderMobCats(idx) {
+  const el = document.getElementById('mob-cats');
+  if (!el) return;
+  el.innerHTML = GROUPS[idx].cats.map(c =>
+    `<button class="mob-cat-btn${activeSec === c.id ? ' active' : ''}" onclick="showSection('${c.id}');highlightMobCat(this)">${c.name}</button>`
+  ).join('');
+}
+
+function highlightMobCat(btn) {
+  document.querySelectorAll('.mob-cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ─── MOBILE CART ───
+let mobCartOpen = false;
+
+function toggleMobCart() {
+  mobCartOpen = !mobCartOpen;
+  document.getElementById('cart-panel').classList.toggle('mob-open', mobCartOpen);
+  document.getElementById('mob-overlay').classList.toggle('show', mobCartOpen);
+  document.getElementById('mcb-chevron').classList.toggle('up', mobCartOpen);
+}
+
+function updateMobCartBar() {
+  const keys  = Object.keys(cart);
+  const qty   = keys.reduce((s, k) => s + cart[k].qty, 0);
+  const total = keys.reduce((s, k) => s + cart[k].price * cart[k].qty, 0);
+  const label = document.getElementById('mcb-label');
+  const price = document.getElementById('mcb-price');
+  const num   = document.getElementById('mcb-total-num');
+  if (label) label.textContent = qty ? `已选 ${qty} 件植物` : '购物车空空如也';
+  if (price) price.style.display = qty ? 'inline' : 'none';
+  if (num)   num.textContent = total.toLocaleString();
+}
+
 // ─── INIT ───
 buildNav();
 buildSections();
+buildMobNav();
 // default: open first group, select first cat
 showSection(GROUPS[0].cats[0].id);
 </script>
